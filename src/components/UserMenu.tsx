@@ -3,33 +3,51 @@ import {
   Menu,
   Stack,
   Title,
+  Group,
   Button,
+  Avatar,
   createStyles,
   useMantineColorScheme,
 } from '@mantine/core'
 import { useRouter } from 'next/router'
+import useUserStore from '@/stores/user'
 import { useDisclosure } from '@mantine/hooks'
 import useTranslation from '@/hooks/useTranslation'
 import { showNotification } from '@mantine/notifications'
-import { BiCog, BiSun, BiMoon, BiLogOut } from 'react-icons/bi'
+import { BiCog, BiSun, BiMoon, BiLogOut, BiUser } from 'react-icons/bi'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 
 const useStyles = createStyles((theme) => ({
+  userName: {
+    [`@media (max-width: ${theme.breakpoints.xs}px)`]: {
+      display: 'none',
+    },
+  },
+
+  avatar: {
+    color: theme.colors.blue,
+    backgroundColor: theme.colors.blue,
+  },
+
   menuActive: {
     backgroundColor:
       theme.colorScheme === 'dark'
         ? theme.colors.dark[5]
         : theme.colors.gray[0],
+    img: {
+      opacity: 0.85,
+      borderRadius: theme.radius.md,
+    },
   },
 }))
 
 export default function UserMenu() {
   const router = useRouter()
   const { locale } = router
-  const { session, supabaseClient } = useSessionContext()
-  const user = session?.user
   const { t } = useTranslation()
+  const { user, removeUser } = useUserStore()
   const { classes, cx } = useStyles()
+  const { supabaseClient } = useSessionContext()
   const [opened, { toggle }] = useDisclosure(false)
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const darkScheme = colorScheme === 'dark'
@@ -44,6 +62,7 @@ export default function UserMenu() {
   async function userSignOut() {
     try {
       await supabaseClient.auth.signOut()
+      removeUser()
       router.push('/')
     } catch (error) {
       showNotification({
@@ -64,12 +83,23 @@ export default function UserMenu() {
       <Menu.Target>
         <Button
           px="xs"
-          disabled={!session}
+          disabled={!user}
           className={cx({
             [classes.menuActive]: opened,
           })}
         >
-          {user?.user_metadata.name?.split(' ')[0] || 'No user'}
+          <Group spacing={6}>
+            <Text className={classes.userName}>
+              {user?.user_metadata.name?.split(' ')[0] || 'No user'}
+            </Text>
+            {user?.userImageUrl ? (
+              <Avatar size="sm" src={user.userImageUrl} alt="Avatar">
+                <BiUser />
+              </Avatar>
+            ) : (
+              <BiUser />
+            )}
+          </Group>
         </Button>
       </Menu.Target>
       <Menu.Dropdown>

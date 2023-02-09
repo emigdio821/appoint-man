@@ -1,3 +1,5 @@
+import { User as SupaUser } from '@supabase/auth-helpers-nextjs'
+
 export interface Translation {
   homePageTitle: string
   welcome: string
@@ -31,3 +33,8 @@ export interface LocaleItems {
   id: Locale
   code: LocaleKey
 }
+interface userImageUrl {
+  userImageUrl: string
+}
+
+export interface User extends userImageUrl, SupaUser {}

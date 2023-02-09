@@ -3,7 +3,7 @@ import { useDisclosure } from '@mantine/hooks'
 import { BiGlobe, BiCheck } from 'react-icons/bi'
 import { LocaleItems, type Locale } from '@/types'
 import useTranslation from '@/hooks/useTranslation'
-import { Menu, createStyles, Button } from '@mantine/core'
+import { Menu, createStyles, Button, ActionIcon } from '@mantine/core'
 
 const useStyles = createStyles((theme) => ({
   menuActive: {
@@ -46,14 +46,16 @@ export default function LangSwitcher() {
       onClose={() => toggle()}
     >
       <Menu.Target>
-        <Button
+        <ActionIcon
           px="xs"
+          size="lg"
+          variant="default"
           className={cx({
             [classes.menuActive]: opened,
           })}
         >
-          <BiGlobe />
-        </Button>
+          <BiGlobe size={16} />
+        </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Label>{t('language')}</Menu.Label>
