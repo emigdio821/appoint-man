@@ -58,7 +58,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     props: {
       user: session.user,
       initialSession: session,
-      userImageUrl: data?.signedUrl,
+      userImageUrl: data?.signedUrl || null,
     },
   }
 }

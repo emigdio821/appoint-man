@@ -11,7 +11,7 @@ import {
 } from '@mantine/core'
 import NextLink from 'next/link'
 // import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
 import useTranslation from '@/hooks/useTranslation'
@@ -62,9 +62,10 @@ const useStyles = createStyles((theme) => {
       filter: `brightness(${isDark ? 0.8 : 1})`,
     },
 
-    googleBtn: {
-      maxWidth: 300,
+    signInBtn: {
+      maxWidth: 240,
       margin: '0 auto',
+      textDecoration: 'none',
       borderRadius: theme.radius.xl,
     },
   }
@@ -109,31 +110,46 @@ export default function Login() {
             <Title size="h2" align="center" mb="xl">
               {t('welcomeTo')} AppointMan
             </Title>
-            {session ? (
-              <Stack spacing="xs">
-                <Title size="h4">{session.user.user_metadata.name}</Title>
-                <NextLink href="/">
-                  <Button loading={isLoading} rightIcon={<BiRightArrowAlt />}>
-                    {t('goToHome')}
+            <Stack spacing={2} w="100%">
+              {session ? (
+                <>
+                  <Title size="h4" align="center">
+                    {session.user.user_metadata.name}
+                  </Title>
+                  <NextLink
+                    href="/"
+                    passHref
+                    style={{
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Button
+                      fullWidth
+                      loading={isLoading}
+                      className={classes.signInBtn}
+                      rightIcon={<BiRightArrowAlt />}
+                    >
+                      {t('goToHome')}
+                    </Button>
+                  </NextLink>
+                </>
+              ) : (
+                <>
+                  <Text align="center" color="dimmed">
+                    {t('signInWith')}
+                  </Text>
+                  <Button
+                    fullWidth
+                    loading={isLoading}
+                    leftIcon={<FaGoogle />}
+                    onClick={signInWithGoogle}
+                    className={classes.signInBtn}
+                  >
+                    Google
                   </Button>
-                </NextLink>
-              </Stack>
-            ) : (
-              <Stack w="100%" spacing={1}>
-                <Text align="center" color="dimmed">
-                  {t('signInWith')}
-                </Text>
-                <Button
-                  fullWidth
-                  loading={isLoading}
-                  leftIcon={<FaGoogle />}
-                  onClick={signInWithGoogle}
-                  className={classes.googleBtn}
-                >
-                  Google
-                </Button>
-              </Stack>
-            )}
+                </>
+              )}
+            </Stack>
             <Group spacing="xs">
               <LangSwitcher />
               <ThemeSwitcher />

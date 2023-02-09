@@ -39,7 +39,7 @@ export default function NotFound() {
         <Stack align="center">
           <Title className={classes.label}>404</Title>
           <Title className={classes.title}>{t('pageNotFound')}</Title>
-          <NextLink href="/">
+          <NextLink href="/" passHref>
             <Button size="md" leftIcon={<BiLeftArrowAlt size={14} />}>
               {t('backToHome')}
             </Button>

@@ -18,7 +18,7 @@ export default function useTranslation() {
     (l: Locale) => {
       if (l === locale) return
       setCookie(l || 'es')
-      router.push(asPath, asPath, { locale: l })
+      router.push(asPath, asPath, { locale: l, shallow: true })
     },
     [asPath, locale, router, setCookie],
   )
