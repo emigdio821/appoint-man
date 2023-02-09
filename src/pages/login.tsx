@@ -1,12 +1,13 @@
 import {
+  Box,
   Text,
   Paper,
   Title,
   Stack,
   Group,
-  Image,
   Button,
   createStyles,
+  BackgroundImage,
 } from '@mantine/core'
 import NextLink from 'next/link'
 // import { useEffect } from 'react'
@@ -22,35 +23,55 @@ import { BiCalendar, BiRightArrowAlt } from 'react-icons/bi'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 
-const useStyles = createStyles((theme) => ({
-  container: {
-    height: '100vh',
-  },
-  paper: {
-    borderRight: `1px solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3]
-    }`,
-    width: '30%',
+const useStyles = createStyles((theme) => {
+  const isDark = theme.colorScheme === 'dark'
 
-    [`@media (max-width: ${theme.breakpoints.md}px)`]: {
-      maxWidth: '100% !important',
+  return {
+    container: {
+      height: '100vh',
+      alignItems: 'center',
+      flexDirection: 'row',
+      [`@media (max-width: ${theme.breakpoints.md}px)`]: {
+        flexDirection: 'column-reverse',
+      },
     },
-  },
-  image: {
-    maxWidth: '70%',
-    [`@media (max-width: ${theme.breakpoints.md}px)`]: {
-      display: 'none',
+
+    paper: {
+      borderRight: `1px solid ${
+        isDark ? theme.colors.dark[7] : theme.colors.gray[3]
+      }`,
+      width: '30%',
+      [`@media (max-width: ${theme.breakpoints.md}px)`]: {
+        width: '100%',
+        height: '70%',
+      },
     },
-  },
-  googleBtn: {
-    maxWidth: 300,
-    margin: '0 auto',
-    borderRadius: theme.radius.xl,
-  },
-}))
+
+    imageContainer: {
+      width: '70%',
+      height: '100%',
+      [`@media (max-width: ${theme.breakpoints.md}px)`]: {
+        height: '30%',
+        width: '100%',
+      },
+    },
+
+    image: {
+      height: '100%',
+      opacity: isDark ? 0.8 : 1,
+      filter: `brightness(${isDark ? 0.8 : 1})`,
+    },
+
+    googleBtn: {
+      maxWidth: 300,
+      margin: '0 auto',
+      borderRadius: theme.radius.xl,
+    },
+  }
+})
 
 export default function Login() {
-  const router = useRouter()
+  // const router = useRouter()
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { supabaseClient, session, isLoading } = useSessionContext()
@@ -81,8 +102,8 @@ export default function Login() {
   return (
     <>
       <Helmet title="Login" />
-      <Group grow spacing={0} className={classes.container}>
-        <Paper className={classes.paper} p={60}>
+      <Stack spacing={0} className={classes.container}>
+        <Paper className={classes.paper} p="xl">
           <Stack align="center">
             <BiCalendar size={28} />
             <Title size="h2" align="center" mb="xl">
@@ -113,19 +134,19 @@ export default function Login() {
                 </Button>
               </Stack>
             )}
-
             <Group spacing="xs">
               <LangSwitcher />
               <ThemeSwitcher />
             </Group>
           </Stack>
         </Paper>
-        <Image
-          alt="Login bg"
-          className={classes.image}
-          src="/images/login-bg.webp"
-        />
-      </Group>
+        <Box className={classes.imageContainer}>
+          <BackgroundImage
+            src="/images/login-bg.webp"
+            className={classes.image}
+          />
+        </Box>
+      </Stack>
     </>
   )
 }
