@@ -1,0 +1,20 @@
+{
+  "homePageTitle": "Appointments",
+  "welcome": "Welcome",
+  "welcomeTo": "Welcome to",
+  "welcomeDescription": "Here you'll find all your appointments",
+  "settings": "Settings",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark",
+  "logout": "Logout",
+  "login": "Login",
+  "signInWith": "Sign in with",
+  "error": "Something went wrong, try again",
+  "backToHome": "Back to Home",
+  "pageNotFound": "Page not found",
+  "english": "English",
+  "spanish": "Spanish",
+  "language": "Language",
+  "goToHome": "Go to Home"
+}

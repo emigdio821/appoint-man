@@ -1,0 +1,20 @@
+{
+  "homePageTitle": "Citas",
+  "welcome": "Bienvenido(a)",
+  "welcomeTo": "Bienvenido(a) a",
+  "welcomeDescription": "Aquí encontrarás todas tus citas",
+  "settings": "Opciones",
+  "theme": "Tema",
+  "light": "Claro",
+  "dark": "Oscuro",
+  "logout": "Cerrar Sesión",
+  "login": "Inicio de Sesión",
+  "signInWith": "Iniciar sesión con",
+  "error": "Algo salió mal, intenta más tarde",
+  "backToHome": "Regresar al Inicio",
+  "pageNotFound": "Ésta página no existe",
+  "english": "Inglés",
+  "spanish": "Español",
+  "language": "Idioma",
+  "goToHome": "Ir al Inicio"
+}
