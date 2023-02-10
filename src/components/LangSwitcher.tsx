@@ -1,22 +1,8 @@
+import { LocaleItems } from '@/types'
 import { useRouter } from 'next/router'
-import { useDisclosure } from '@mantine/hooks'
 import { BiGlobe, BiCheck } from 'react-icons/bi'
-import { LocaleItems, type Locale } from '@/types'
 import useTranslation from '@/hooks/useTranslation'
-import { Menu, createStyles, Button } from '@mantine/core'
-
-const useStyles = createStyles((theme) => ({
-  menuActive: {
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[5]
-        : theme.colors.gray[0],
-  },
-
-  localeActive: {
-    fontWeight: 600,
-  },
-}))
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 const localeItems: LocaleItems[] = [
   {
@@ -30,52 +16,48 @@ const localeItems: LocaleItems[] = [
 ]
 
 export default function LangSwitcher() {
-  const { classes, cx } = useStyles()
   const { locale, locales } = useRouter()
   const { t, setLocale } = useTranslation()
-  const [opened, { toggle }] = useDisclosure(false)
-  const selectedIcon = (l: Locale) => (locale === l ? <BiCheck /> : <BiGlobe />)
 
   if (!locales) return null
 
   return (
-    <Menu
-      position="bottom-end"
-      transition="rotate-left"
-      onOpen={() => toggle()}
-      onClose={() => toggle()}
-    >
-      <Menu.Target>
-        <Button
-          px="xs"
-          className={cx({
-            [classes.menuActive]: opened,
-          })}
-        >
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <button aria-label="Lang switcher" className="simple-btn">
           <BiGlobe />
-        </Button>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Label>{t('language')}</Menu.Label>
-        {locales.map((l) => {
-          const localeItem = localeItems.find((item) => item.id === l)
-          if (localeItem) {
-            const localeItemId = localeItem.id
-            return (
-              <Menu.Item
-                key={localeItemId}
-                className={cx({
-                  [classes.localeActive]: locale === l,
-                })}
-                icon={selectedIcon(localeItemId)}
-                onClick={() => setLocale(localeItemId)}
-              >
-                {t(localeItem.code)}
-              </Menu.Item>
-            )
-          }
-        })}
-      </Menu.Dropdown>
-    </Menu>
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          align="end"
+          sideOffset={5}
+          className="dropdown-content shadow-md"
+        >
+          <DropdownMenu.RadioGroup value={locale}>
+            {locales.map((l) => {
+              const localeItem = localeItems.find((item) => item.id === l)
+              if (localeItem) {
+                const localeItemId = localeItem.id
+                return (
+                  <DropdownMenu.RadioItem
+                    key={localeItemId}
+                    value={localeItemId}
+                    className="dropdown-item"
+                    onClick={() => setLocale(localeItemId)}
+                  >
+                    <DropdownMenu.ItemIndicator className="dropdown-indicator">
+                      <BiCheck />
+                    </DropdownMenu.ItemIndicator>
+                    {t(localeItem.code)}
+                  </DropdownMenu.RadioItem>
+                )
+              }
+            })}
+          </DropdownMenu.RadioGroup>
+          <DropdownMenu.Arrow className="fill-white dark:fill-zinc-800" />
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   )
 }

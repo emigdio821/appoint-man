@@ -1,19 +1,14 @@
 import Navbar from './Navbar'
-import { Container, Flex, useMantineTheme } from '@mantine/core'
 
 interface WrapperProps {
   children: React.ReactNode
 }
 
 export default function AppWrapper({ children }: WrapperProps) {
-  const theme = useMantineTheme()
-
   return (
-    <Flex justify="space-between">
+    <div className="flex justify-center">
       <Navbar />
-      <Container p="md" pt={theme.spacing.xs + 57} w="100%">
-        {children}
-      </Container>
-    </Flex>
+      <div className="w-full p-4 pt-[4.5rem]">{children}</div>
+    </div>
   )
 }

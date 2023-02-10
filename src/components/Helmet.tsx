@@ -1,7 +1,7 @@
 import NextHead from 'next/head'
 
 interface HelmetProps {
-  title: string
+  title?: string
 }
 
 export default function Helmet({ title }: HelmetProps) {

@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import useSWR, { Fetcher } from 'swr'
 import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
-import { Text, Title } from '@mantine/core'
 import AppWrapper from '@/components/AppWrapper'
 import useTranslation from '@/hooks/useTranslation'
 import { GetServerSidePropsContext } from 'next/types'
@@ -28,11 +27,11 @@ export default function Home({ user, userImageUrl }: HomeProps) {
   return (
     <AppWrapper>
       <Helmet title="Home" />
-      <Title size="h3">
+      <h3>
         {t('welcome')}, {user.user_metadata?.name}
-      </Title>
-      <Text>{t('welcomeDescription')}</Text>
-      <CreateAppointment />
+      </h3>
+      <p>{t('welcomeDescription')}</p>
+      {/* <CreateAppointment /> */}
     </AppWrapper>
   )
 }
