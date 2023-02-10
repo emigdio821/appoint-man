@@ -78,11 +78,13 @@ export default function Login() {
   const { supabaseClient, session, isLoading } = useSessionContext()
 
   async function signInWithGoogle() {
+    const googleScope = 'https://www.googleapis.com/auth'
     try {
       await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: '/',
+          scopes: `${googleScope}/calendar ${googleScope}/calendar.events`,
         },
       })
     } catch (error) {

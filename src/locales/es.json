@@ -16,5 +16,10 @@
   "english": "Inglés",
   "spanish": "Español",
   "language": "Idioma",
-  "goToHome": "Ir al Inicio"
+  "goToHome": "Ir al Inicio",
+  "invalidEmail": "Correo inválido",
+  "requiredField": "Campo requerido",
+  "email": "Correo",
+  "name": "Nombre",
+  "createAppointmentTitle": "Crear una Cita"
 }

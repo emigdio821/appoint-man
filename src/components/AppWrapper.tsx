@@ -1,15 +1,12 @@
 import Navbar from './Navbar'
-import { User } from '@/types'
-import { Container, Flex, createStyles } from '@mantine/core'
+import { Container, Flex, useMantineTheme } from '@mantine/core'
 
 interface WrapperProps {
   children: React.ReactNode
 }
 
-const useStyles = createStyles((theme) => ({}))
-
 export default function AppWrapper({ children }: WrapperProps) {
-  const { theme } = useStyles()
+  const theme = useMantineTheme()
 
   return (
     <Flex justify="space-between">

@@ -16,5 +16,10 @@
   "english": "English",
   "spanish": "Spanish",
   "language": "Language",
-  "goToHome": "Go to Home"
+  "goToHome": "Go to Home",
+  "invalidEmail": "Invalid email",
+  "requiredField": "Required field",
+  "email": "Email",
+  "name": "Name",
+  "createAppointmentTitle": "Create an Appointment"
 }

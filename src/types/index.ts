@@ -19,6 +19,11 @@ export interface Translation {
   spanish: string
   language: string
   goToHome: string
+  invalidEmail: string
+  requiredField: string
+  email: string
+  name: string
+  createAppointmentTitle: string
 }
 
 export interface Translations {

@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
-import { Text, Title } from '@mantine/core'
 import useSWR, { Fetcher } from 'swr'
 import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
+import { Text, Title } from '@mantine/core'
 import AppWrapper from '@/components/AppWrapper'
-import { GetServerSidePropsContext } from 'next/types'
-import { createServerSupabaseClient, User } from '@supabase/auth-helpers-nextjs'
 import useTranslation from '@/hooks/useTranslation'
+import { GetServerSidePropsContext } from 'next/types'
+import CreateAppointment from '@/components/CreateAppointment'
+import { createServerSupabaseClient, User } from '@supabase/auth-helpers-nextjs'
 
 interface HomeProps {
   user: User
@@ -31,6 +32,7 @@ export default function Home({ user, userImageUrl }: HomeProps) {
         {t('welcome')}, {user.user_metadata?.name}
       </Title>
       <Text>{t('welcomeDescription')}</Text>
+      <CreateAppointment />
     </AppWrapper>
   )
 }
