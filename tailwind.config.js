@@ -38,6 +38,34 @@ module.exports = {
           '0%': { opacity: 0, transform: 'translateX(2px)' },
           '100%': { opacity: 1, transform: 'translateX(0)' },
         },
+        swipeOut: {
+          '0%': {
+            transform: 'translateX(var(--radix-toast-swipe-end-x))',
+          },
+          '100%': {
+            transform: `translateX(calc(100% + ${defaultTheme.spacing[6]}))`,
+          },
+        },
+        slideIn: {
+          '0%': {
+            opacity: 0,
+            transform: `translateX(calc(100% + ${defaultTheme.spacing[6]}))`,
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translateX(0)',
+          },
+        },
+        hide: {
+          '0%': {
+            opacity: 1,
+            transform: 'translateY(0)',
+          },
+          '100%': {
+            opacity: 0,
+            transform: 'translateY(5px)',
+          },
+        },
       },
       animation: {
         slideUpAndFade: 'slideUpAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)',
@@ -47,6 +75,9 @@ module.exports = {
           'slideRightAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)',
         slideLeftAndFade:
           'slideLeftAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)',
+        slideIn: 'slideIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+        hide: 'hide 0.1s ease-in',
+        swipeOut: 'swipeOut 100ms ease-out',
       },
     },
   },

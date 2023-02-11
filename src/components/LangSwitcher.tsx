@@ -34,6 +34,9 @@ export default function LangSwitcher() {
           sideOffset={5}
           className="dropdown-content shadow-md"
         >
+          <DropdownMenu.Label className="dropdown-label mb-3 opacity-70">
+            {t('language')}
+          </DropdownMenu.Label>
           <DropdownMenu.RadioGroup value={locale}>
             {locales.map((l) => {
               const localeItem = localeItems.find((item) => item.id === l)

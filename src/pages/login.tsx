@@ -1,4 +1,4 @@
-import NextLink from 'next/link'
+import Link from 'next/link'
 // import { useEffect } from 'react'
 // import { useRouter } from 'next/router'
 import Helmet from '@/components/Helmet'
@@ -53,12 +53,12 @@ export default function Login() {
                   <h4 className="text-center text-lg font-bold opacity-80">
                     {session.user.user_metadata.name}
                   </h4>
-                  <NextLink href="/" passHref className="w-full max-w-[240px]">
+                  <Link href="/" passHref className="w-full max-w-[240px]">
                     <button className="simple-btn flex w-full items-center justify-center gap-2 rounded-full text-sm">
                       {t('goToHome')}
                       <BiRightArrowAlt />
                     </button>
-                  </NextLink>
+                  </Link>
                 </>
               ) : (
                 <>

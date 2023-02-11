@@ -7,30 +7,6 @@ import { useSessionContext } from '@supabase/auth-helpers-react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import * as Avatar from '@radix-ui/react-avatar'
 
-// const useStyles = createStyles((theme) => ({
-//   userName: {
-//     [`@media (max-width: ${theme.breakpoints.xs}px)`]: {
-//       display: 'none',
-//     },
-//   },
-
-//   avatar: {
-//     color: theme.colors.blue,
-//     backgroundColor: theme.colors.blue,
-//   },
-
-//   menuActive: {
-//     backgroundColor:
-//       theme.colorScheme === 'dark'
-//         ? theme.colors.dark[5]
-//         : theme.colors.gray[0],
-//     img: {
-//       opacity: 0.85,
-//       borderRadius: theme.radius.md,
-//     },
-//   },
-// }))
-
 export default function UserMenu() {
   const router = useRouter()
   const { locale } = router
@@ -72,9 +48,9 @@ export default function UserMenu() {
             />
             <Avatar.Fallback
               delayMs={600}
-              className="leading-1 flex h-full w-full items-center justify-center bg-gray-200 text-sm font-medium dark:bg-zinc-800"
+              className="flex h-full w-full items-center justify-center bg-gray-200 text-sm font-medium dark:bg-zinc-800"
             >
-              {user?.user_metadata.name.charAt(0)}
+              <BiUser />
             </Avatar.Fallback>
           </Avatar.Root>
         </button>
@@ -85,12 +61,14 @@ export default function UserMenu() {
           sideOffset={5}
           className="dropdown-content shadow-md"
         >
-          <div className="mb-3 flex flex-col px-2">
+          <DropdownMenu.Label className="dropdown-label">
             <h4 className="text-base font-semibold">
               {user?.user_metadata.full_name}
             </h4>
-            <h5 className="text-xs opacity-75">{user?.email}</h5>
-          </div>
+          </DropdownMenu.Label>
+          <DropdownMenu.Label className="dropdown-label mb-3 opacity-70">
+            {user?.email}
+          </DropdownMenu.Label>
           <DropdownMenu.DropdownMenuItem className="dropdown-item">
             <DropdownMenu.Item className="dropdown-indicator">
               <BiCog />
