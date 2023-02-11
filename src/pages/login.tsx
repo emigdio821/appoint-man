@@ -1,14 +1,15 @@
 import Link from 'next/link'
 // import { useEffect } from 'react'
 // import { useRouter } from 'next/router'
+import classNames from 'classnames'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
 import useTranslation from '@/hooks/useTranslation'
 import LangSwitcher from '@/components/LangSwitcher'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
 import { GetServerSidePropsContext } from 'next/types'
-import { BiCalendar, BiRightArrowAlt } from 'react-icons/bi'
 import { useSessionContext } from '@supabase/auth-helpers-react'
+import { BiCalendar, BiLoaderAlt, BiRightArrowAlt } from 'react-icons/bi'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 
 export default function Login() {
@@ -53,21 +54,33 @@ export default function Login() {
                   <h4 className="text-center text-lg font-bold opacity-80">
                     {session.user.user_metadata.name}
                   </h4>
-                  <Link href="/" passHref className="w-full max-w-[240px]">
-                    <button className="simple-btn flex w-full items-center justify-center gap-2 rounded-full text-sm">
-                      {t('goToHome')}
+                  <Link
+                    href="/"
+                    passHref
+                    data-disabled={isLoading}
+                    className="simple-btn flex w-full max-w-[240px] items-center justify-center gap-2 rounded-full text-sm"
+                  >
+                    {t('goToHome')}
+                    {isLoading ? (
+                      <BiLoaderAlt className="animate-spin" />
+                    ) : (
                       <BiRightArrowAlt />
-                    </button>
+                    )}
                   </Link>
                 </>
               ) : (
                 <>
                   <p className="text-center">{t('signInWith')}</p>
                   <button
+                    disabled={isLoading}
                     onClick={signInWithGoogle}
-                    className="simple-btn flex w-full max-w-[240px] items-center justify-center gap-2 rounded-full"
+                    className="simple-btn flex w-full max-w-[240px] items-center justify-center gap-2 rounded-full text-sm"
                   >
-                    <FaGoogle />
+                    {isLoading ? (
+                      <BiLoaderAlt className="animate-spin" />
+                    ) : (
+                      <FaGoogle />
+                    )}
                     Google
                   </button>
                 </>

@@ -24,6 +24,7 @@ export interface Translation {
   email: string
   name: string
   createAppointmentTitle: string
+  dismiss: string
 }
 
 export interface Translations {

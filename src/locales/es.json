@@ -21,5 +21,6 @@
   "requiredField": "Campo requerido",
   "email": "Correo",
   "name": "Nombre",
-  "createAppointmentTitle": "Crear una Cita"
+  "createAppointmentTitle": "Crear una Cita",
+  "dismiss": "Cerrar"
 }
