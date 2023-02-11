@@ -16,7 +16,7 @@ export default function UserMenu() {
   const { theme, setTheme } = useTheme()
   const isDark = theme === 'dark'
   const { user, removeUser } = useUserStore()
-  const { supabaseClient } = useSessionContext()
+  const { supabaseClient, isLoading } = useSessionContext()
   const [showToast, setShowToast] = useState<boolean>(false)
 
   async function openSettings() {
@@ -39,7 +39,7 @@ export default function UserMenu() {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button
-            aria-label="User Menu"
+            disabled={isLoading || !user}
             className="simple-btn flex items-center gap-2 text-sm"
           >
             <span className="max-xs:hidden">

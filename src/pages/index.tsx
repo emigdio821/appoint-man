@@ -1,5 +1,4 @@
 // import useSWR, { Fetcher } from 'swr'
-import Toast from '@/components/Toast'
 import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
 import { useEffect, useState } from 'react'
@@ -17,7 +16,6 @@ interface HomeProps {
 export default function Home({ user, userImageUrl }: HomeProps) {
   const { t } = useTranslation()
   const { addUser } = useUserStore()
-  const [showToast, setShowToast] = useState<boolean>(false)
 
   useEffect(() => {
     if (user) {
@@ -33,13 +31,6 @@ export default function Home({ user, userImageUrl }: HomeProps) {
         {t('welcome')}, {user.user_metadata?.name}
       </h3>
       <p className="text-md">{t('welcomeDescription')}</p>
-      <Toast
-        title="Error"
-        isOpen={showToast}
-        setOpen={setShowToast}
-        description={t('error')}
-      />
-      <button onClick={() => setShowToast(true)}>Shot toast!</button>
       {/* <CreateAppointment /> */}
     </AppWrapper>
   )
