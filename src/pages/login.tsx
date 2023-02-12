@@ -1,80 +1,21 @@
-import {
-  Box,
-  Text,
-  Paper,
-  Title,
-  Stack,
-  Group,
-  Button,
-  createStyles,
-  BackgroundImage,
-} from '@mantine/core'
-import NextLink from 'next/link'
+import Link from 'next/link'
 // import { useEffect } from 'react'
 // import { useRouter } from 'next/router'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
+import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import LangSwitcher from '@/components/LangSwitcher'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
 import { GetServerSidePropsContext } from 'next/types'
-import { showNotification } from '@mantine/notifications'
-import { BiCalendar, BiRightArrowAlt } from 'react-icons/bi'
 import { useSessionContext } from '@supabase/auth-helpers-react'
+import { BiCalendar, BiLoaderAlt, BiRightArrowAlt } from 'react-icons/bi'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
-
-const useStyles = createStyles((theme) => {
-  const isDark = theme.colorScheme === 'dark'
-
-  return {
-    container: {
-      height: '100vh',
-      alignItems: 'center',
-      flexDirection: 'row',
-      [`@media (max-width: ${theme.breakpoints.md}px)`]: {
-        flexDirection: 'column-reverse',
-      },
-    },
-
-    paper: {
-      borderRight: `1px solid ${
-        isDark ? theme.colors.dark[7] : theme.colors.gray[3]
-      }`,
-      width: '30%',
-      [`@media (max-width: ${theme.breakpoints.md}px)`]: {
-        width: '100%',
-        height: '70%',
-      },
-    },
-
-    imageContainer: {
-      width: '70%',
-      height: '100%',
-      [`@media (max-width: ${theme.breakpoints.md}px)`]: {
-        height: '30%',
-        width: '100%',
-      },
-    },
-
-    image: {
-      height: '100%',
-      opacity: isDark ? 0.8 : 1,
-      filter: `brightness(${isDark ? 0.8 : 1})`,
-    },
-
-    signInBtn: {
-      maxWidth: 240,
-      margin: '0 auto',
-      textDecoration: 'none',
-      borderRadius: theme.radius.xl,
-    },
-  }
-})
 
 export default function Login() {
   // const router = useRouter()
   const { t } = useTranslation()
-  const { classes } = useStyles()
+  const { showToast } = useToastManager()
   const { supabaseClient, session, isLoading } = useSessionContext()
 
   async function signInWithGoogle() {
@@ -87,12 +28,12 @@ export default function Login() {
           scopes: `${googleScope}/calendar ${googleScope}/calendar.events`,
         },
       })
-    } catch (error) {
-      showNotification({
-        color: 'red',
-        title: 'Error',
-        message: t('error'),
-      })
+    } catch (err) {
+      let error = t('error')
+      if (err instanceof Error) {
+        error = err.message
+      }
+      showToast({ title: 'Error', description: error })
     }
   }
 
@@ -104,67 +45,60 @@ export default function Login() {
 
   return (
     <>
-      <Helmet title="Login" />
-      <Stack spacing={0} className={classes.container}>
-        <Paper className={classes.paper} p="xl">
-          <Stack align="center">
+      <Helmet title={t('login')} />
+      <div className="flex h-screen items-center max-md:flex-col-reverse">
+        <div className="w-1/3 p-6 max-md:h-2/3 max-md:w-full">
+          <div className="flex flex-col items-center justify-center gap-2">
             <BiCalendar size={28} />
-            <Title size="h2" align="center" mb="xl">
+            <h2 className="mb-6 text-center text-xl font-bold">
               {t('welcomeTo')} AppointMan
-            </Title>
-            <Stack spacing={2} w="100%">
+            </h2>
+            <div className="flex w-full flex-col items-center gap-1">
               {session ? (
                 <>
-                  <Title size="h4" align="center">
+                  <h4 className="text-center text-lg font-bold opacity-80">
                     {session.user.user_metadata.name}
-                  </Title>
-                  <NextLink
+                  </h4>
+                  <Link
                     href="/"
                     passHref
-                    style={{
-                      textDecoration: 'none',
-                    }}
+                    data-disabled={isLoading}
+                    className="simple-btn flex w-full max-w-[240px] items-center justify-center gap-2 rounded-full text-sm"
                   >
-                    <Button
-                      fullWidth
-                      loading={isLoading}
-                      className={classes.signInBtn}
-                      rightIcon={<BiRightArrowAlt />}
-                    >
-                      {t('goToHome')}
-                    </Button>
-                  </NextLink>
+                    {t('goToHome')}
+                    {isLoading ? (
+                      <BiLoaderAlt className="animate-spin" />
+                    ) : (
+                      <BiRightArrowAlt />
+                    )}
+                  </Link>
                 </>
               ) : (
                 <>
-                  <Text align="center" color="dimmed">
-                    {t('signInWith')}
-                  </Text>
-                  <Button
-                    fullWidth
-                    loading={isLoading}
-                    leftIcon={<FaGoogle />}
+                  <p className="text-center">{t('signInWith')}</p>
+                  <button
+                    disabled={isLoading}
                     onClick={signInWithGoogle}
-                    className={classes.signInBtn}
+                    className="simple-btn flex w-full max-w-[240px] items-center justify-center gap-2 rounded-full text-sm"
                   >
+                    {isLoading ? (
+                      <BiLoaderAlt className="animate-spin" />
+                    ) : (
+                      <FaGoogle />
+                    )}
                     Google
-                  </Button>
+                  </button>
                 </>
               )}
-            </Stack>
-            <Group spacing="xs">
+            </div>
+            <div className="flex gap-1">
               <LangSwitcher />
               <ThemeSwitcher />
-            </Group>
-          </Stack>
-        </Paper>
-        <Box className={classes.imageContainer}>
-          <BackgroundImage
-            src="/images/login-bg.webp"
-            className={classes.image}
-          />
-        </Box>
-      </Stack>
+            </div>
+          </div>
+        </div>
+        <div className="h-full w-2/3 bg-[url('/images/login-bg.webp')] bg-cover max-md:h-1/3 max-md:w-full" />
+      </div>
     </>
   )
 }

@@ -21,5 +21,6 @@
   "requiredField": "Required field",
   "email": "Email",
   "name": "Name",
-  "createAppointmentTitle": "Create an Appointment"
+  "createAppointmentTitle": "Create an Appointment",
+  "dismiss": "Dismiss"
 }

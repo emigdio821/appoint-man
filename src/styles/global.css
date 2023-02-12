@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .dropdown-content {
+    @apply min-w-[100px] rounded-md bg-white p-2 outline-none duration-300 data-[side=left]:animate-slideLeftAndFade data-[side=bottom]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade dark:bg-zinc-800;
+  }
+
+  .dropdown-item {
+    @apply relative flex h-7 cursor-pointer select-none items-center rounded-md py-0 px-2 pl-6 text-ssm leading-none outline-none data-[highlighted]:bg-stone-100/80 data-[highlighted]:dark:bg-zinc-700/40;
+  }
+
+  .dropdown-indicator {
+    @apply absolute left-0 inline-flex w-6 items-center justify-center;
+  }
+
+  .dropdown-label {
+    @apply px-2 text-xs;
+  }
+
+  .simple-btn {
+    @apply rounded-md border p-2 outline-none hover:bg-stone-200/50 focus:bg-stone-200/50 disabled:pointer-events-none disabled:opacity-70 data-[disabled=true]:pointer-events-none data-[state=open]:bg-stone-200/50 data-[disabled=true]:opacity-70 dark:border-gray-50/5 dark:hover:bg-gray-50/5 dark:focus:bg-gray-50/5 dark:data-[state=open]:bg-gray-50/5;
+  }
+
+  .toast-move {
+    @apply data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)];
+  }
+
+  .toast-cancel {
+    @apply data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform;
+  }
+
+  .toast-slindein {
+    @apply data-[state=open]:animate-slideIn;
+  }
+
+  .toast-closed {
+    @apply data-[state=closed]:animate-hide;
+  }
+
+  .toast-swipe-end {
+    @apply data-[swipe=end]:animate-swipeOut;
+  }
+
+  .toast-viewport {
+    @apply fixed bottom-0 right-0 z-50 m-0 flex w-[26rem] max-w-[100vw] list-none flex-col gap-2 p-4;
+  }
+}

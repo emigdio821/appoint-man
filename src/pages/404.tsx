@@ -1,51 +1,22 @@
-import {
-  Stack,
-  Title,
-  Paper,
-  Button,
-  Container,
-  createStyles,
-} from '@mantine/core'
-import NextLink from 'next/link'
+import Link from 'next/link'
 import { BiLeftArrowAlt } from 'react-icons/bi'
 import useTranslation from '@/hooks/useTranslation'
 
-const useStyles = createStyles((theme) => ({
-  label: {
-    fontSize: 120,
-    fontWeight: 900,
-    textAlign: 'center',
-    color:
-      theme.colorScheme === 'dark'
-        ? theme.colors.dark[4]
-        : theme.colors.gray[2],
-  },
-
-  title: {
-    fontSize: 32,
-    fontWeight: 900,
-    textAlign: 'center',
-    marginBottom: theme.spacing.md,
-  },
-}))
-
 export default function NotFound() {
   const { t } = useTranslation()
-  const { classes } = useStyles()
 
   return (
-    <Container p="xl" maw={720}>
-      <Paper withBorder p="md">
-        <Stack align="center">
-          <Title className={classes.label}>404</Title>
-          <Title className={classes.title}>{t('pageNotFound')}</Title>
-          <NextLink href="/" passHref>
-            <Button size="md" leftIcon={<BiLeftArrowAlt size={14} />}>
-              {t('backToHome')}
-            </Button>
-          </NextLink>
-        </Stack>
-      </Paper>
-    </Container>
+    <div className="mx-auto mt-4 max-w-2xl rounded-md border p-4 dark:border-gray-50/5">
+      <div className="flex flex-col items-center gap-4">
+        <h1 className="text-center text-9xl font-extrabold opacity-50">404</h1>
+        <h1 className="text-center text-3xl font-bold opacity-90">
+          {t('pageNotFound')}
+        </h1>
+        <Link href="/" className="simple-btn flex items-center gap-1 text-sm">
+          <BiLeftArrowAlt />
+          {t('goToHome')}
+        </Link>
+      </div>
+    </div>
   )
 }

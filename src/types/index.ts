@@ -24,6 +24,7 @@ export interface Translation {
   email: string
   name: string
   createAppointmentTitle: string
+  dismiss: string
 }
 
 export interface Translations {
@@ -43,3 +44,12 @@ interface userImageUrl {
 }
 
 export interface User extends userImageUrl, SupaUser {}
+
+export interface ToastOptions {
+  title: string
+  description?: string
+  action?: {
+    text: string
+    callback: () => void
+  }
+}
