@@ -24,8 +24,7 @@ export default function useTranslation() {
   )
 
   const t = useCallback(
-    (key: LocaleKey) =>
-      locale ? translations[locale as Locale][key] : undefined,
+    (key: LocaleKey) => (locale ? translations[locale as Locale][key] : ''),
     [locale],
   )
 

@@ -22,5 +22,7 @@
   "email": "Correo",
   "name": "Nombre",
   "createAppointmentTitle": "Crear una Cita",
-  "dismiss": "Cerrar"
+  "dismiss": "Cerrar",
+  "success": "¡Genial!",
+  "appointmentCreated": "Tu cita ha sido registrada"
 }

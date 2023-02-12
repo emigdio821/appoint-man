@@ -25,6 +25,8 @@ export interface Translation {
   name: string
   createAppointmentTitle: string
   dismiss: string
+  success: string
+  appointmentCreated: string
 }
 
 export interface Translations {
@@ -48,6 +50,7 @@ export interface User extends userImageUrl, SupaUser {}
 export interface ToastOptions {
   title: string
   description?: string
+  onOpenChange?: (isOpen: boolean) => void
   action?: {
     text: string
     callback: () => void

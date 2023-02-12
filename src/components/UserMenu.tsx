@@ -30,8 +30,12 @@ export default function UserMenu() {
       await supabaseClient.auth.signOut()
       removeUser()
       router.push('/')
-    } catch (error) {
-      showToast({ title: 'Error', description: t('error') })
+    } catch (err) {
+      let error = t('error')
+      if (err instanceof Error) {
+        error = err.message
+      }
+      showToast({ title: 'Error', description: error })
     }
   }
 

@@ -2,12 +2,22 @@ import { ToastOptions } from '@/types'
 import useTranslation from '@/hooks/useTranslation'
 import * as ToastPrimitive from '@radix-ui/react-toast'
 
-export default function Toast({ title, action, description }: ToastOptions) {
+export default function Toast({
+  title,
+  action,
+  description,
+  onOpenChange,
+}: ToastOptions) {
   const { t } = useTranslation()
 
   return (
     <ToastPrimitive.Root
       type="foreground"
+      onOpenChange={(isOpen) => {
+        if (onOpenChange) {
+          onOpenChange(isOpen)
+        }
+      }}
       className="toast-swipe-end toast-closed toast-move toast-cancel toast-slindein relative flex flex-col items-start rounded-md border bg-white px-4 py-2 shadow-lg dark:border-gray-50/5 dark:bg-zinc-900"
     >
       {title && (

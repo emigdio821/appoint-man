@@ -8,19 +8,30 @@ interface ToastContextValue {
 }
 
 interface ToastProviderProps {
-  children: React.ReactElement
+  children: React.ReactNode
 }
 
 const ToastContext = createContext<ToastContextValue>({
   showToast: () => {},
 })
 
-export const useToastManager = () => useContext(ToastContext)
-export const ToastProvider = ({ children }: ToastProviderProps) => {
-  const [toasts, setToasts] = useState<ToastOptions[]>([])
+export const useToastManager = (): ToastContextValue => useContext(ToastContext)
 
-  function showToast(options: ToastOptions) {
-    setToasts((prevToasts) => [...prevToasts, options])
+export const ToastProvider = ({ children }: ToastProviderProps) => {
+  const [toasts, setToasts] = useState<Map<string, ToastOptions>>(new Map())
+
+  const showToast = (options: ToastOptions) => {
+    setToasts((prevToasts) => {
+      const toastsMap = new Map(prevToasts)
+      toastsMap.set(String(Date.now()), { ...options })
+      return toastsMap
+    })
+  }
+
+  const handleRemoveToast = (isOpen: boolean, toastId: string) => {
+    if (!isOpen) {
+      toasts.delete(toastId)
+    }
   }
 
   const contextValue: ToastContextValue = {
@@ -31,12 +42,13 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
     <ToastContext.Provider value={contextValue}>
       <PrimitiveProvider swipeDirection="right" swipeThreshold={60}>
         {children}
-        {toasts.map((toast, index) => (
+        {Array.from(toasts).map(([key, toast]) => (
           <RadixToast
-            key={index}
+            key={key}
             title={toast.title}
             action={toast.action}
             description={toast.description}
+            onOpenChange={(isOpen: boolean) => handleRemoveToast(isOpen, key)}
           />
         ))}
         <Viewport className="toast-viewport" />

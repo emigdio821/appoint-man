@@ -46,4 +46,8 @@
   .toast-viewport {
     @apply fixed bottom-0 right-0 z-50 m-0 flex w-[26rem] max-w-[100vw] list-none flex-col gap-2 p-4;
   }
+
+  .simple-input {
+    @apply rounded-md border bg-transparent p-2 outline-none focus:bg-stone-50/60 disabled:cursor-not-allowed disabled:border-stone-100 disabled:bg-stone-100 disabled:opacity-70 disabled:placeholder:opacity-50 dark:focus:bg-gray-100/5 disabled:dark:border-blackA8 disabled:dark:bg-blackA8;
+  }
 }
