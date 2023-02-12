@@ -15,12 +15,11 @@ export default async function handler(
   } = await supabaseServerClient.auth.getSession()
 
   if (!session) {
-    res.status(500).json({ error: 'No active session' })
-    return
+    return res.status(403).json('Unauthorized')
   }
 
   const response = await fetch(ep, {
-    method: 'POST',
+    method: req.method,
     headers: {
       Authorization: `Bearer ${session?.provider_token}`,
     },
@@ -31,7 +30,6 @@ export default async function handler(
     const event = await response.json()
     res.status(200).json(event)
   } else {
-    let message = 'Failed to write data'
-    res.status(response.status).json({ error: message })
+    res.status(response.status).json(response.statusText)
   }
 }

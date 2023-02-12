@@ -32,7 +32,7 @@ export default function LangSwitcher() {
         <DropdownMenu.Content
           align="end"
           sideOffset={5}
-          className="dropdown-content shadow-md"
+          className="dropdown-content toast-closed shadow-md"
         >
           <DropdownMenu.Label className="dropdown-label mb-3 opacity-70">
             {t('language')}
