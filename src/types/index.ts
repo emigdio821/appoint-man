@@ -44,3 +44,12 @@ interface userImageUrl {
 }
 
 export interface User extends userImageUrl, SupaUser {}
+
+export interface ToastOptions {
+  title: string
+  description?: string
+  action?: {
+    text: string
+    callback: () => void
+  }
+}

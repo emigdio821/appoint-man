@@ -1,9 +1,9 @@
 import Link from 'next/link'
 // import { useEffect } from 'react'
 // import { useRouter } from 'next/router'
-import classNames from 'classnames'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
+import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import LangSwitcher from '@/components/LangSwitcher'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
@@ -15,6 +15,7 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 export default function Login() {
   // const router = useRouter()
   const { t } = useTranslation()
+  const { showToast } = useToastManager()
   const { supabaseClient, session, isLoading } = useSessionContext()
 
   async function signInWithGoogle() {
@@ -27,8 +28,12 @@ export default function Login() {
           scopes: `${googleScope}/calendar ${googleScope}/calendar.events`,
         },
       })
-    } catch (error) {
-      alert(t('error'))
+    } catch (err) {
+      let error = t('error')
+      if (err instanceof Error) {
+        error = err.message
+      }
+      showToast({ title: 'Error', description: error })
     }
   }
 

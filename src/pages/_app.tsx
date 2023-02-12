@@ -2,10 +2,7 @@ import { useState } from 'react'
 import { AppProps } from 'next/app'
 // import { Inter } from '@next/font/google'
 import { ThemeProvider } from 'next-themes'
-import {
-  Provider as ToastProvider,
-  Viewport as ToastViewPort,
-} from '@radix-ui/react-toast'
+import { ToastProvider } from '@/context/toast'
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { SessionContextProvider, Session } from '@supabase/auth-helpers-react'
 import '@/styles/global.css'
@@ -26,9 +23,8 @@ export default function App({
       initialSession={pageProps.initialSession}
     >
       <ThemeProvider attribute="class" defaultTheme="dark">
-        <ToastProvider swipeDirection="right" swipeThreshold={80}>
+        <ToastProvider>
           <Component {...pageProps} />
-          <ToastViewPort className="toast-viewport" />
         </ToastProvider>
       </ThemeProvider>
     </SessionContextProvider>

@@ -44,6 +44,6 @@
   }
 
   .toast-viewport {
-    @apply fixed bottom-0 right-0 z-50 m-0 flex max-w-[100vw] list-none flex-col gap-2 p-4;
+    @apply fixed bottom-0 right-0 z-50 m-0 flex w-[26rem] max-w-[100vw] list-none flex-col gap-2 p-4;
   }
 }

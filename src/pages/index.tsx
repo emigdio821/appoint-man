@@ -26,7 +26,7 @@ export default function Home({ user, userImageUrl }: HomeProps) {
 
   return (
     <AppWrapper>
-      <Helmet title="Home" />
+      <Helmet title={t('homePageTitle')} />
       <h3 className="text-2xl font-semibold">
         {t('welcome')}, {user.user_metadata?.name}
       </h3>
@@ -38,7 +38,6 @@ export default function Home({ user, userImageUrl }: HomeProps) {
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const supabase = createServerSupabaseClient(ctx)
-  // const { locale } = ctx
   const {
     data: { session },
   } = await supabase.auth.getSession()
