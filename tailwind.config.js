@@ -63,7 +63,22 @@ module.exports = {
           },
           '100%': {
             opacity: 0,
-            transform: 'translateY(5px)',
+            transform: 'translateY(2px)',
+          },
+        },
+        overlayShow: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+        contentShow: {
+          '0%': { opacity: 0, transform: 'translate(-50%, -45%)' },
+          '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+        },
+        contentHide: {
+          '0%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+          '100%': {
+            opacity: 0,
+            transform: 'translate(-50%, -45%)',
           },
         },
       },
@@ -78,6 +93,9 @@ module.exports = {
         slideIn: 'slideIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
         hide: 'hide 0.1s ease-in',
         swipeOut: 'swipeOut 100ms ease-out',
+        overlayShow: 'overlayShow 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+        contentShow: 'contentShow 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+        contentHide: 'contentHide 300ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

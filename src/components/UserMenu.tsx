@@ -44,7 +44,7 @@ export default function UserMenu() {
       <DropdownMenu.Trigger asChild>
         <button
           disabled={isLoading || !user}
-          className="simple-btn flex items-center gap-2 text-sm"
+          className="simple-btn flex items-center gap-2 text-sm font-medium"
         >
           <span className="max-xs:hidden">
             {user?.user_metadata.name?.split(' ')[0] || 'No user'}
@@ -68,7 +68,7 @@ export default function UserMenu() {
         <DropdownMenu.Content
           align="end"
           sideOffset={5}
-          className="dropdown-content shadow-md"
+          className="dropdown-content toast-closed shadow-md"
         >
           <DropdownMenu.Label className="dropdown-label">
             <h4 className="text-base font-semibold">
