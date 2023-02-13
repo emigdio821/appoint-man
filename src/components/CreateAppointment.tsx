@@ -1,10 +1,11 @@
 import clsx from 'clsx'
+import axios from 'axios'
 import { useState } from 'react'
-import { LocaleKey } from '@/types'
+import useUserStore from '@/stores/user'
 import { useForm } from 'react-hook-form'
-import axios, { AxiosError } from 'axios'
-import { useToastManager } from '@/context/toast'
 import * as Dialog from '@radix-ui/react-dialog'
+import { useToastManager } from '@/context/toast'
+import { LocaleKey, EventPayload } from '@/types'
 import { appointmentsSchema } from '@/form-schemas'
 import useTranslation from '@/hooks/useTranslation'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -26,6 +27,7 @@ function roundToNearest1hr() {
 }
 
 export default function CreateAppointment() {
+  const { user } = useUserStore()
   const session = useSession()
   const { showToast } = useToastManager()
   const { t, locale } = useTranslation()
@@ -42,7 +44,7 @@ export default function CreateAppointment() {
 
   const onSubmit = handleSubmit(async (values) => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    const eventData = {
+    const eventPayload: EventPayload = {
       summary: values.summary,
       description: values.description,
       start: {
@@ -55,8 +57,11 @@ export default function CreateAppointment() {
       },
     }
     try {
-      const res = await axios.post('/api/google/create-event', eventData)
-      // const event = await res.json()
+      const event = await axios.post('/api/google/create-event', {
+        event: eventPayload,
+        providerToken: user?.providerRefreshToken,
+      })
+
       showToast({ title: t('success'), description: t('appointmentCreated') })
     } catch (error) {
       console.error(error)

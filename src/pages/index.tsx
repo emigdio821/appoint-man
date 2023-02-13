@@ -1,28 +1,59 @@
 // import useSWR, { Fetcher } from 'swr'
+import {
+  User,
+  Session,
+  createServerSupabaseClient,
+} from '@supabase/auth-helpers-nextjs'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
-import { useEffect, useState } from 'react'
 import AppWrapper from '@/components/AppWrapper'
 import useTranslation from '@/hooks/useTranslation'
 import { GetServerSidePropsContext } from 'next/types'
 import CreateAppointment from '@/components/CreateAppointment'
-import { createServerSupabaseClient, User } from '@supabase/auth-helpers-nextjs'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 
 interface HomeProps {
   user: User
   userImageUrl: string
+  initialSession: Session
 }
 
-export default function Home({ user, userImageUrl }: HomeProps) {
+export default function Home({
+  user,
+  userImageUrl,
+  initialSession,
+}: HomeProps) {
+  const router = useRouter()
   const { t } = useTranslation()
-  const { addUser } = useUserStore()
+  const supabase = useSupabaseClient()
+  const { addUser, removeUser } = useUserStore()
+  const { provider_refresh_token: providerRefreshToken } = initialSession
 
   useEffect(() => {
     if (user) {
-      const userData = { ...user, userImageUrl }
+      const userData = {
+        ...user,
+        userImageUrl,
+        providerRefreshToken,
+      }
       addUser(userData)
     }
-  }, [addUser, user, userImageUrl])
+  }, [addUser, providerRefreshToken, user, userImageUrl])
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_, session) => {
+      if (!session) {
+        removeUser()
+        router.push('/login')
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [removeUser, router, supabase.auth])
 
   return (
     <AppWrapper>

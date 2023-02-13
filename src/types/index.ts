@@ -1,4 +1,4 @@
-import { User as SupaUser } from '@supabase/auth-helpers-nextjs'
+import { User as SupaUser, Session } from '@supabase/auth-helpers-nextjs'
 
 export interface Translation {
   homePageTitle: string
@@ -41,11 +41,16 @@ export interface LocaleItems {
   id: Locale
   code: LocaleKey
 }
-interface userImageUrl {
+
+interface UserImageUrl {
   userImageUrl: string
 }
 
-export interface User extends userImageUrl, SupaUser {}
+interface providerRefreshToken {
+  providerRefreshToken?: string | null
+}
+
+export interface User extends UserImageUrl, providerRefreshToken, SupaUser {}
 
 export interface ToastOptions {
   title: string
@@ -54,5 +59,18 @@ export interface ToastOptions {
   action?: {
     text: string
     callback: () => void
+  }
+}
+
+export interface EventPayload {
+  summary: string
+  description: string
+  start: {
+    dateTime: string
+    timeZome: string
+  }
+  end: {
+    dateTime: string
+    timeZone: string
   }
 }

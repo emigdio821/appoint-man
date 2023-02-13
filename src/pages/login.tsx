@@ -25,6 +25,10 @@ export default function Login() {
         provider: 'google',
         options: {
           redirectTo: '/',
+          queryParams: {
+            prompt: 'consent',
+            access_type: 'offline',
+          },
           scopes: `${googleScope}/calendar ${googleScope}/calendar.events`,
         },
       })

@@ -12,10 +12,10 @@ export default function UserMenu() {
   const router = useRouter()
   const { locale } = router
   const { t } = useTranslation()
+  const { user } = useUserStore()
   const { theme, setTheme } = useTheme()
   const isDarkTheme = theme === 'dark'
   const { showToast } = useToastManager()
-  const { user, removeUser } = useUserStore()
   const { supabaseClient, isLoading } = useSessionContext()
 
   async function openSettings() {
@@ -28,8 +28,8 @@ export default function UserMenu() {
   async function userSignOut() {
     try {
       await supabaseClient.auth.signOut()
-      removeUser()
-      router.push('/')
+      // removeUser()
+      // router.push('/')
     } catch (err) {
       let error = t('error')
       if (err instanceof Error) {
@@ -52,7 +52,7 @@ export default function UserMenu() {
           <Avatar.Root className="inline-flex h-5 w-5 select-none items-center justify-center overflow-hidden rounded-md bg-blackA3 align-middle">
             <Avatar.Image
               alt="Avatar"
-              // src={user?.userImageUrl}
+              src={user?.userImageUrl}
               className="h-full w-full rounded-[inherit] object-cover"
             />
             <Avatar.Fallback
