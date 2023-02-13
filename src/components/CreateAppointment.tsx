@@ -82,7 +82,7 @@ export default function CreateAppointment() {
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 animate-overlayShow bg-blackA9 backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-2/4 left-2/4 max-h-[85vh] w-[90vw] max-w-md -translate-x-2/4 -translate-y-2/4 animate-contentShow rounded-md bg-white p-6 shadow-md focus:outline-none data-[state=closed]:animate-contentHide dark:bg-gray12">
+        <Dialog.Content className="fixed top-2/4 left-2/4 max-h-[85vh] w-[90vw] max-w-md -translate-x-2/4 -translate-y-2/4 animate-contentShow rounded-md bg-white p-6 shadow-md focus:outline-none data-[state=closed]:animate-contentHide dark:bg-zinc-900">
           <Dialog.Title className="text-lg font-semibold">
             Create Appointment
           </Dialog.Title>
@@ -98,7 +98,7 @@ export default function CreateAppointment() {
                   placeholder="Summary"
                   {...register('summary')}
                   className={clsx('simple-input text-sm', {
-                    'dark:border-gray11/10': !errors.summary,
+                    'dark:border-zinc-800': !errors.summary,
                     'border-red-400 text-red-400': errors.summary,
                   })}
                 />
@@ -114,7 +114,7 @@ export default function CreateAppointment() {
                   placeholder="Description"
                   {...register('description')}
                   className={clsx('simple-input resize-none text-sm', {
-                    'dark:border-gray-50/5': !errors.description,
+                    'dark:border-zinc-800': !errors.description,
                     'border-red-400 text-red-400': errors.description,
                   })}
                 />
@@ -128,7 +128,7 @@ export default function CreateAppointment() {
                 <button
                   type="submit"
                   disabled={!isValid || isSubmitting}
-                  className="simple-btn flex items-center gap-2 bg-gray2 px-4 text-sm font-semibold dark:bg-neutral-900"
+                  className="simple-btn flex items-center gap-2 px-4 text-sm font-semibold"
                 >
                   {isSubmitting ? (
                     <>

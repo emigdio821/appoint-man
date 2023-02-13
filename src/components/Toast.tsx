@@ -18,7 +18,7 @@ export default function Toast({
           onOpenChange(isOpen)
         }
       }}
-      className="toast-swipe-end toast-closed toast-move toast-cancel toast-slindein relative flex flex-col items-start rounded-md border bg-white px-4 py-2 shadow-lg dark:border-gray-50/5 dark:bg-zinc-900"
+      className="toast-swipe-end toast-closed toast-move toast-cancel toast-slindein relative flex flex-col items-start rounded-md border bg-white px-4 py-2 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
     >
       {title && (
         <ToastPrimitive.Title className="text-md font-medium">

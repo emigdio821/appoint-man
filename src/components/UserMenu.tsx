@@ -52,12 +52,12 @@ export default function UserMenu() {
           <Avatar.Root className="inline-flex h-5 w-5 select-none items-center justify-center overflow-hidden rounded-md bg-blackA3 align-middle">
             <Avatar.Image
               alt="Avatar"
-              src={user?.userImageUrl}
+              // src={user?.userImageUrl}
               className="h-full w-full rounded-[inherit] object-cover"
             />
             <Avatar.Fallback
               delayMs={600}
-              className="flex h-full w-full items-center justify-center bg-gray-200 text-sm font-medium dark:bg-zinc-800"
+              className="flex h-full w-full items-center justify-center bg-zinc-200 text-sm font-medium dark:bg-zinc-700"
             >
               <BiUser />
             </Avatar.Fallback>
@@ -100,7 +100,7 @@ export default function UserMenu() {
               <>{`${t('theme')} ${isDarkTheme ? t('light') : t('dark')}`}</>
             )}
           </DropdownMenu.DropdownMenuItem>
-          <DropdownMenu.Separator className="my-1 h-[1px] bg-gray-100 dark:bg-zinc-700/70" />
+          <DropdownMenu.Separator className="my-1 h-[1px] bg-zinc-100 dark:bg-zinc-700/50" />
           <DropdownMenu.DropdownMenuItem
             onClick={userSignOut}
             className="dropdown-item text-red-400"
@@ -110,7 +110,7 @@ export default function UserMenu() {
             </DropdownMenu.Item>
             <div>Logout</div>
           </DropdownMenu.DropdownMenuItem>
-          <DropdownMenu.Arrow className="fill-white dark:fill-zinc-800" />
+          <DropdownMenu.Arrow className="fill-white dark:fill-zinc-900" />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
