@@ -46,11 +46,11 @@ interface UserImageUrl {
   userImageUrl: string
 }
 
-interface providerRefreshToken {
+interface ProviderRefreshToken {
   providerRefreshToken?: string | null
 }
 
-export interface User extends UserImageUrl, providerRefreshToken, SupaUser {}
+export interface User extends UserImageUrl, ProviderRefreshToken, SupaUser {}
 
 export interface ToastOptions {
   title: string
