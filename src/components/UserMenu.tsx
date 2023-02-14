@@ -1,6 +1,7 @@
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import useUserStore from '@/stores/user'
+import { deleteCookie } from 'cookies-next'
 import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import { BiCog, BiSun, BiMoon, BiLogOut, BiUser } from 'react-icons/bi'
@@ -12,7 +13,7 @@ export default function UserMenu() {
   const router = useRouter()
   const { locale } = router
   const { t } = useTranslation()
-  const { user } = useUserStore()
+  const { user, removeUser } = useUserStore()
   const { theme, setTheme } = useTheme()
   const isDarkTheme = theme === 'dark'
   const { showToast } = useToastManager()
@@ -28,8 +29,9 @@ export default function UserMenu() {
   async function userSignOut() {
     try {
       await supabaseClient.auth.signOut()
-      // removeUser()
-      // router.push('/')
+      removeUser()
+      deleteCookie('google-refresh-token')
+      router.push('/')
     } catch (err) {
       let error = t('error')
       if (err instanceof Error) {

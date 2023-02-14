@@ -16,6 +16,7 @@ export default function Login() {
   // const router = useRouter()
   const { t } = useTranslation()
   const { showToast } = useToastManager()
+  // ${googleScope}/calendar
   const { supabaseClient, session, isLoading } = useSessionContext()
 
   async function signInWithGoogle() {
@@ -29,7 +30,7 @@ export default function Login() {
             prompt: 'consent',
             access_type: 'offline',
           },
-          scopes: `${googleScope}/calendar ${googleScope}/calendar.events`,
+          scopes: `${googleScope}/calendar.events`,
         },
       })
     } catch (err) {

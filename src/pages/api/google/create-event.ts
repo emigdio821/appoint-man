@@ -36,19 +36,26 @@ export default async function handler(
   const {
     data: { session },
   } = await supabaseServerClient.auth.getSession()
+  const googleRefreshToken = req.cookies['google-refresh-token']
 
-  if (!session) {
+  if (!session || !googleRefreshToken) {
     return res.status(403).json('Unauthorized')
   }
 
-  const { data: tokenData } = await getAccessToken(req.body.providerToken)
+  const { data: tokenData } = await getAccessToken(googleRefreshToken as string)
 
   try {
-    const response = await axios.post(eventsEP, {
+    const response = await axios({
+      method: 'POST',
+      url: eventsEP,
       headers: {
         Authorization: `Bearer ${tokenData.access_token}`,
       },
-      body: req.body.event,
+      data: req.body.event,
+      params: {
+        sendUpdates: 'all',
+        sendNotifications: true,
+      },
     })
 
     res.status(200).json(response.data)

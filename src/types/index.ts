@@ -73,4 +73,14 @@ export interface EventPayload {
     dateTime: string
     timeZone: string
   }
+  attendees: {
+    email: string
+  }[]
+}
+
+export interface EventFormValues {
+  summary: string
+  description: string
+  date: string
+  time: string
 }

@@ -1,59 +1,46 @@
 // import useSWR, { Fetcher } from 'swr'
-import {
-  User,
-  Session,
-  createServerSupabaseClient,
-} from '@supabase/auth-helpers-nextjs'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+// import { useRouter } from 'next/router'
 import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
 import AppWrapper from '@/components/AppWrapper'
+import TimePicker from '@/components/TimePicker'
+import CreateEvent from '@/components/CreateEvent'
 import useTranslation from '@/hooks/useTranslation'
+import { setCookie, getCookie } from 'cookies-next'
 import { GetServerSidePropsContext } from 'next/types'
-import CreateAppointment from '@/components/CreateAppointment'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import { User, createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 
 interface HomeProps {
   user: User
   userImageUrl: string
-  initialSession: Session
+  googleCookie: string | null
 }
 
-export default function Home({
-  user,
-  userImageUrl,
-  initialSession,
-}: HomeProps) {
-  const router = useRouter()
+export default function Home({ user, userImageUrl, googleCookie }: HomeProps) {
+  // const router = useRouter()
   const { t } = useTranslation()
-  const supabase = useSupabaseClient()
-  const { addUser, removeUser } = useUserStore()
-  const { provider_refresh_token: providerRefreshToken } = initialSession
+  const { addUser } = useUserStore()
 
   useEffect(() => {
     if (user) {
-      const userData = {
-        ...user,
-        userImageUrl,
-        providerRefreshToken,
-      }
+      const userData = { ...user, userImageUrl }
       addUser(userData)
     }
-  }, [addUser, providerRefreshToken, user, userImageUrl])
+  }, [addUser, user, userImageUrl])
 
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_, session) => {
-      if (!session) {
-        removeUser()
-        router.push('/login')
-      }
-    })
+  // useEffect(() => {
+  //   const {
+  //     data: { subscription },
+  //   } = supabase.auth.onAuthStateChange((_, session) => {
+  //     if (!session) {
+  //       removeUser()
+  //       router.push('/login')
+  //     }
+  //   })
 
-    return () => subscription.unsubscribe()
-  }, [removeUser, router, supabase.auth])
+  //   return () => subscription.unsubscribe()
+  // }, [removeUser, router, supabase.auth])
 
   return (
     <AppWrapper>
@@ -61,13 +48,16 @@ export default function Home({
       <h3 className="text-xl font-semibold">
         {t('welcome')}, {user.user_metadata?.name}
       </h3>
-      <p className="text-sm">{t('welcomeDescription')}</p>
-      <CreateAppointment />
+      <h6 className="text-xs">Refresh token: {googleCookie}</h6>
+      <p className="mb-6 text-sm">{t('welcomeDescription')}</p>
+      {/* <TimePicker /> */}
+      <CreateEvent />
     </AppWrapper>
   )
 }
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const { req, res } = ctx
   const supabase = createServerSupabaseClient(ctx)
   const {
     data: { session },
@@ -81,6 +71,15 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       },
     }
 
+  if (session.provider_refresh_token) {
+    setCookie('google-refresh-token', session.provider_refresh_token, {
+      req,
+      res,
+    })
+  }
+
+  const googleCookie = getCookie('google-refresh-token', { req, res })
+
   const { data } = await supabase.storage
     .from('appoint-man')
     .createSignedUrl(`avatars/${session.user.id}`, 60)
@@ -89,6 +88,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     props: {
       user: session.user,
       initialSession: session,
+      googleCookie: googleCookie || null,
       userImageUrl: data?.signedUrl || null,
     },
   }
