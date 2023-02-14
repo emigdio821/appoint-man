@@ -73,6 +73,7 @@ export default function CreateEvent() {
   return (
     <Dialog
       isOpen={dialogOpened}
+      onClose={() => reset()}
       title="Create Appointment"
       setIsOpen={setDialogOpened}
       trigger={

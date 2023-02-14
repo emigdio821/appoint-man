@@ -5,6 +5,7 @@ interface DialogProps {
   title: string
   isOpen: boolean
   description?: string
+  onClose?: () => void
   trigger?: React.ReactNode
   children: React.ReactNode
   setIsOpen: (opt: boolean) => void
@@ -14,12 +15,21 @@ export default function Dialog({
   title,
   isOpen,
   trigger,
+  onClose,
   children,
   setIsOpen,
   description,
 }: DialogProps) {
   return (
-    <DialogPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
+    <DialogPrimitive.Root
+      open={isOpen}
+      onOpenChange={(opened) => {
+        if (!opened && onClose) {
+          onClose()
+        }
+        setIsOpen(opened)
+      }}
+    >
       {trigger && (
         <DialogPrimitive.Trigger asChild onClick={() => setIsOpen(true)}>
           {trigger}
