@@ -82,5 +82,6 @@ export interface EventFormValues {
   summary: string
   description: string
   date: string
-  time: string
+  startTime: number
+  endTime: number
 }

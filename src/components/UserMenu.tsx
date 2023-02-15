@@ -70,7 +70,7 @@ export default function UserMenu() {
         <DropdownMenu.Content
           align="end"
           sideOffset={5}
-          className="dropdown-content toast-closed shadow-md"
+          className="dropdown-content shadow-md"
         >
           <DropdownMenu.Label className="dropdown-label">
             <h4 className="text-base font-semibold">
@@ -112,7 +112,6 @@ export default function UserMenu() {
             </DropdownMenu.Item>
             <div>Logout</div>
           </DropdownMenu.DropdownMenuItem>
-          <DropdownMenu.Arrow className="fill-white dark:fill-zinc-900" />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

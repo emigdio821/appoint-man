@@ -83,19 +83,19 @@ module.exports = {
         },
       },
       animation: {
-        slideUpAndFade: 'slideUpAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)',
+        slideUpAndFade: 'slideUpAndFade 200ms cubic-bezier(0.16, 0, 0.13, 1)',
         slideDownAndFade:
-          'slideDownAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)',
+          'slideDownAndFade 200ms cubic-bezier(0.16, 0, 0.13, 1)',
         slideRightAndFade:
-          'slideRightAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)',
+          'slideRightAndFade 200ms cubic-bezier(0.16, 0, 0.13, 1)',
         slideLeftAndFade:
-          'slideLeftAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)',
-        slideIn: 'slideIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+          'slideLeftAndFade 200ms cubic-bezier(0.16, 0, 0.13, 1)',
+        slideIn: 'slideIn 200ms cubic-bezier(0.16, 1, 0.3, 1)',
         hide: 'hide 100ms ease-in',
         swipeOut: 'swipeOut 100ms ease-out',
         overlayShow: 'overlayShow 300ms cubic-bezier(0.16, 1, 0.3, 1)',
-        contentShow: 'contentShow 300ms cubic-bezier(0.16, 1, 0.3, 1)',
-        contentHide: 'contentHide 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+        contentShow: 'contentShow 200ms cubic-bezier(0.16, 1, 0.3, 1)',
+        contentHide: 'contentHide 200ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

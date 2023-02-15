@@ -24,7 +24,7 @@ export default function Dialog({
     <DialogPrimitive.Root
       open={isOpen}
       onOpenChange={(opened) => {
-        if (!opened && onClose) {
+        if (onClose) {
           onClose()
         }
         setIsOpen(opened)
@@ -36,10 +36,10 @@ export default function Dialog({
         </DialogPrimitive.Trigger>
       )}
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 animate-overlayShow bg-blackA9 backdrop-blur-sm" />
+        <DialogPrimitive.Overlay className="fixed inset-0 animate-overlayShow overflow-y-auto bg-blackA9 backdrop-blur-sm" />
         <DialogPrimitive.Content
           onInteractOutside={(e) => e.preventDefault()}
-          className="fixed top-2/4 left-2/4 max-h-[85vh] w-[90vw] max-w-md -translate-x-2/4 -translate-y-2/4 animate-contentShow rounded-md bg-white p-6 shadow-md focus:outline-none data-[state=closed]:animate-contentHide dark:bg-zinc-900"
+          className="fixed top-2/4 left-2/4 w-[90vw] max-w-md -translate-x-2/4 -translate-y-2/4 animate-contentShow rounded-md bg-white p-6 shadow-md focus:outline-none data-[state=closed]:animate-contentHide dark:bg-zinc-900"
         >
           <DialogPrimitive.Title className="text-lg font-semibold">
             {title}

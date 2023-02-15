@@ -32,7 +32,7 @@ export default function LangSwitcher() {
         <DropdownMenu.Content
           align="end"
           sideOffset={5}
-          className="dropdown-content toast-closed shadow-md"
+          className="dropdown-content shadow-md"
         >
           <DropdownMenu.Label className="dropdown-label mb-3 opacity-70">
             {t('language')}
@@ -58,7 +58,6 @@ export default function LangSwitcher() {
               }
             })}
           </DropdownMenu.RadioGroup>
-          <DropdownMenu.Arrow className="fill-white dark:fill-zinc-800" />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

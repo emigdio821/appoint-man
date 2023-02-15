@@ -20,9 +20,17 @@ export function formatDate(date: Date) {
   ].join('-')
 }
 
-export function formatTime(date: Date) {
+export function formatTimeFromDate(date: Date) {
   const hours = date.getHours()
   const minutes = date.getMinutes()
 
   return `${hours}:${(minutes > 9 ? '' : '0') + minutes}`
+}
+
+export function arrayRange(start: number, stop: number, step: number = 1) {
+  const result = []
+  for (let i = start; i <= stop; i += step) {
+    result.push(i)
+  }
+  return result
 }

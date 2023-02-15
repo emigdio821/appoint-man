@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import axios from 'axios'
-import Dialog from './Dialog'
 import { useState } from 'react'
+import Dialog from './radix/Dialog'
 import useUserStore from '@/stores/user'
 import { useForm } from 'react-hook-form'
 import { useToastManager } from '@/context/toast'
@@ -10,17 +10,23 @@ import useTranslation from '@/hooks/useTranslation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { BiCalendarEvent, BiLoaderAlt } from 'react-icons/bi'
 import { LocaleKey, EventPayload, EventFormValues } from '@/types'
-import { formatDate, formatTime, roundToNearest1hr, add1Hour } from '@/utils'
+import { add1Hour, formatDate, arrayRange, roundToNearest1hr } from '@/utils'
+import { Select, SelectItem } from './radix/Select'
+
+const startWorkingHour = 10
+const endWorkingHour = 20
 
 export default function CreateEvent() {
+  const { t } = useTranslation()
   const { user } = useUserStore()
   const { showToast } = useToastManager()
-  const { t } = useTranslation()
+  const nextHour = roundToNearest1hr().getHours()
   const [dialogOpened, setDialogOpened] = useState(false)
 
   const {
     reset,
     register,
+    getValues,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
   } = useForm<EventFormValues>({
@@ -28,28 +34,37 @@ export default function CreateEvent() {
       summary: '',
       description: '',
       date: formatDate(new Date()),
-      time: formatTime(roundToNearest1hr()),
+      startTime: nextHour,
+      endTime: nextHour < endWorkingHour ? nextHour + 1 : new Date().getHours(),
     },
     resolver: yupResolver(appointmentsSchema),
+    mode: 'onChange',
   })
+
+  const items = arrayRange(startWorkingHour, endWorkingHour).map((number) => ({
+    value: number.toString(),
+    disabled: roundToNearest1hr().getHours() > number,
+    text: `${number < 10 ? `0${number}` : number}:00`,
+  }))
 
   const onSubmit = handleSubmit(async (values) => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    const dateTime = new Date(`${values.date}, ${values.time}`)
+    const startDateTime = new Date(`${values.date}, ${values.startTime}:00`)
+    const endDateTime = new Date(`${values.date}, ${values.endTime}:00`)
     const eventPayload: EventPayload = {
       summary: values.summary,
       description: values.description,
       start: {
-        dateTime: dateTime.toISOString(),
+        dateTime: startDateTime.toISOString(),
         timeZome: timezone,
       },
       end: {
-        dateTime: add1Hour(dateTime).toISOString(),
+        dateTime: endDateTime.toISOString(),
         timeZone: timezone,
       },
       attendees: [
         {
-          email: '',
+          email: 'em.torresruiz92@gmail.com',
         },
       ],
     }
@@ -129,15 +144,37 @@ export default function CreateEvent() {
               })}
             />
           </div>
-          <div className="flex flex-col gap-1">
-            <input
-              type="time"
-              {...register('time')}
-              className={clsx('simple-input text-sm', {
-                'border-red-400 text-red-400 dark:border-red-400 dark:text-red-400':
-                  errors.date,
-              })}
-            />
+          <div className="flex gap-2">
+            <Select
+              placeholder="Pick a date"
+              {...register('endTime')}
+              // defaultValue={getValues('startTime').toString()}
+            >
+              {items.map((item) => (
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  disabled={item.disabled}
+                >
+                  {item.text}
+                </SelectItem>
+              ))}
+            </Select>
+            <Select
+              placeholder="Pick a date"
+              {...register('endTime')}
+              // defaultValue={getValues('endTime').toString()}
+            >
+              {items.map((item) => (
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  disabled={item.disabled}
+                >
+                  {item.text}
+                </SelectItem>
+              ))}
+            </Select>
           </div>
           <div className="mt-6 flex justify-end">
             <button
