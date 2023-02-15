@@ -1,4 +1,4 @@
-import { User as SupaUser, Session } from '@supabase/auth-helpers-nextjs'
+import { User as SupaUser } from '@supabase/auth-helpers-nextjs'
 
 export interface Translation {
   homePageTitle: string
@@ -27,6 +27,7 @@ export interface Translation {
   dismiss: string
   success: string
   appointmentCreated: string
+  invalidRange: string
 }
 
 export interface Translations {
@@ -35,11 +36,12 @@ export interface Translations {
 }
 
 export type Locale = keyof Translations
-export type LocaleKey = keyof Translation
+
+export type TranslationKey = keyof Translation
 
 export interface LocaleItems {
   id: Locale
-  code: LocaleKey
+  code: TranslationKey
 }
 
 interface UserImageUrl {
@@ -82,6 +84,6 @@ export interface EventFormValues {
   summary: string
   description: string
   date: string
-  startTime: number
-  endTime: number
+  startTime: string
+  endTime: string
 }

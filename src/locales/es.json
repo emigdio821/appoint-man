@@ -24,5 +24,6 @@
   "createAppointmentTitle": "Crear una Cita",
   "dismiss": "Cerrar",
   "success": "¡Genial!",
-  "appointmentCreated": "Tu cita ha sido registrada"
+  "appointmentCreated": "Tu cita ha sido registrada",
+  "invalidRange": "Rango inválido"
 }

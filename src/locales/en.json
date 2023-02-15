@@ -24,5 +24,6 @@
   "createAppointmentTitle": "Create an Appointment",
   "dismiss": "Dismiss",
   "success": "Success!",
-  "appointmentCreated": "Your appointment has been registered"
+  "appointmentCreated": "Your appointment has been registered",
+  "invalidRange": "Invalid range"
 }

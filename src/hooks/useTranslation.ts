@@ -3,7 +3,7 @@ import es from '@/locales/es.json'
 import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { setCookie } from 'cookies-next'
-import { Translations, Locale, LocaleKey } from '@/types'
+import { Translations, Locale, TranslationKey } from '@/types'
 
 const translations: Translations = { en, es }
 
@@ -20,7 +20,8 @@ export default function useTranslation() {
   )
 
   const t = useCallback(
-    (key: LocaleKey) => (locale ? translations[locale as Locale][key] : ''),
+    (key: TranslationKey) =>
+      locale ? translations[locale as Locale][key] : '',
     [locale],
   )
 

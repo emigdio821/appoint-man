@@ -1,3 +1,9 @@
+import {
+  BiTime,
+  BiCalendar,
+  BiLoaderAlt,
+  BiCalendarEvent,
+} from 'react-icons/bi'
 import clsx from 'clsx'
 import axios from 'axios'
 import { useState } from 'react'
@@ -7,11 +13,10 @@ import { useForm } from 'react-hook-form'
 import { useToastManager } from '@/context/toast'
 import { appointmentsSchema } from '@/form-schemas'
 import useTranslation from '@/hooks/useTranslation'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { BiCalendarEvent, BiLoaderAlt } from 'react-icons/bi'
-import { LocaleKey, EventPayload, EventFormValues } from '@/types'
-import { add1Hour, formatDate, arrayRange, roundToNearest1hr } from '@/utils'
 import { Select, SelectItem } from './radix/Select'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { formatDate, arrayRange, roundToNearest1hr } from '@/utils'
+import { TranslationKey, EventPayload, EventFormValues } from '@/types'
 
 const startWorkingHour = 10
 const endWorkingHour = 20
@@ -20,32 +25,49 @@ export default function CreateEvent() {
   const { t } = useTranslation()
   const { user } = useUserStore()
   const { showToast } = useToastManager()
-  const nextHour = roundToNearest1hr().getHours()
   const [dialogOpened, setDialogOpened] = useState(false)
-
   const {
     reset,
     register,
+    trigger,
+    setValue,
     getValues,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
   } = useForm<EventFormValues>({
     defaultValues: {
       summary: '',
+      endTime: '',
       description: '',
       date: formatDate(new Date()),
-      startTime: nextHour,
-      endTime: nextHour < endWorkingHour ? nextHour + 1 : new Date().getHours(),
+      startTime: roundToNearest1hr().getHours().toString(),
     },
     resolver: yupResolver(appointmentsSchema),
-    mode: 'onChange',
   })
 
-  const items = arrayRange(startWorkingHour, endWorkingHour).map((number) => ({
-    value: number.toString(),
-    disabled: roundToNearest1hr().getHours() > number,
-    text: `${number < 10 ? `0${number}` : number}:00`,
-  }))
+  const startTimeItems = arrayRange(startWorkingHour, endWorkingHour).map(
+    (number) => (
+      <SelectItem
+        key={number.toString()}
+        value={number.toString()}
+        disabled={roundToNearest1hr().getHours() > number}
+      >
+        {`${number < 10 ? `0${number}` : number}:00`}
+      </SelectItem>
+    ),
+  )
+
+  const endTimeItems = arrayRange(startWorkingHour, endWorkingHour).map(
+    (number) => (
+      <SelectItem
+        key={number.toString()}
+        value={number.toString()}
+        disabled={parseInt(getValues('startTime')) >= number}
+      >
+        {`${number < 10 ? `0${number}` : number}:00`}
+      </SelectItem>
+    ),
+  )
 
   const onSubmit = handleSubmit(async (values) => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -103,34 +125,36 @@ export default function CreateEvent() {
       <div className="mt-4">
         <form onSubmit={onSubmit} className="flex flex-col gap-2">
           <div className="flex flex-col gap-1">
+            <label htmlFor="summary" className="text-sm">
+              Summary
+            </label>
             <input
               type="text"
+              id="summary"
               placeholder="Summary"
               {...register('summary')}
-              className={clsx('simple-input text-sm', {
-                'border-red-400 text-red-400 dark:border-red-400 dark:text-red-400':
-                  errors.summary,
-              })}
+              className="simple-input text-sm"
             />
             {errors.summary && (
-              <p className="text-xs text-red-400">
-                {t(errors.summary.message as LocaleKey)}
+              <p className="text-xs text-red-400 dark:text-red-300">
+                {t(errors.summary.message as TranslationKey)}
               </p>
             )}
           </div>
 
           <div className="flex flex-col gap-1">
+            <label htmlFor="description" className="text-sm">
+              Description
+            </label>
             <textarea
+              id="description"
               placeholder="Description"
               {...register('description')}
-              className={clsx('simple-input h-40 resize-none text-sm', {
-                'border-red-400 text-red-400 dark:border-red-400 dark:text-red-400':
-                  errors.description,
-              })}
+              className="simple-input h-40 resize-none text-sm"
             />
             {errors.description && (
-              <p className="text-xs text-red-400">
-                {t(errors.description.message as LocaleKey)}
+              <p className="text-xs text-red-400 dark:text-red-300">
+                {t(errors.description.message as TranslationKey)}
               </p>
             )}
           </div>
@@ -138,48 +162,61 @@ export default function CreateEvent() {
             <input
               type="date"
               {...register('date')}
-              className={clsx('simple-input text-sm', {
-                'border-red-400 text-red-400 dark:border-red-400 dark:text-red-400':
-                  errors.date,
-              })}
+              className="simple-input text-sm"
             />
+            {errors.date && (
+              <p className="text-xs text-red-400 dark:text-red-300">
+                {t(errors.date.message as TranslationKey)}
+              </p>
+            )}
           </div>
           <div className="flex gap-2">
-            <Select
-              placeholder="Pick a date"
-              {...register('endTime')}
-              // defaultValue={getValues('startTime').toString()}
-            >
-              {items.map((item) => (
-                <SelectItem
-                  key={item.value}
-                  value={item.value}
-                  disabled={item.disabled}
-                >
-                  {item.text}
-                </SelectItem>
-              ))}
-            </Select>
-            <Select
-              placeholder="Pick a date"
-              {...register('endTime')}
-              // defaultValue={getValues('endTime').toString()}
-            >
-              {items.map((item) => (
-                <SelectItem
-                  key={item.value}
-                  value={item.value}
-                  disabled={item.disabled}
-                >
-                  {item.text}
-                </SelectItem>
-              ))}
-            </Select>
+            <div className="flex w-full flex-col gap-1">
+              <Select
+                icon={<BiTime />}
+                placeholder="Pick a date"
+                {...register('startTime')}
+                defaultValue={getValues('startTime')}
+                onValueChange={(value) => {
+                  setValue('startTime', value, {
+                    shouldValidate: true,
+                  })
+                  trigger('endTime')
+                }}
+              >
+                {startTimeItems}
+              </Select>
+              {errors.startTime && (
+                <p className="text-xs text-red-400 dark:text-red-300">
+                  {t(errors.startTime.message as TranslationKey)}
+                </p>
+              )}
+            </div>
+            <div className="flex w-full flex-col gap-1">
+              <Select
+                icon={<BiTime />}
+                {...register('endTime')}
+                placeholder="Pick a date"
+                onValueChange={(value) => {
+                  setValue('endTime', value, {
+                    shouldValidate: true,
+                  })
+                  trigger('startTime')
+                }}
+              >
+                {endTimeItems}
+              </Select>
+              {errors.endTime && (
+                <p className="text-xs text-red-400 dark:text-red-300">
+                  {t(errors.endTime.message as TranslationKey)}
+                </p>
+              )}
+            </div>
           </div>
           <div className="mt-6 flex justify-end">
             <button
               type="submit"
-              disabled={!isValid || isSubmitting}
+              // disabled={!isValid || isSubmitting}
               className="simple-btn flex items-center gap-2 px-4 text-sm font-semibold"
             >
               {isSubmitting ? (
