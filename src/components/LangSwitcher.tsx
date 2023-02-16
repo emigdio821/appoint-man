@@ -1,8 +1,15 @@
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownLabel,
+  DropdownRadioGroup,
+  DropdownRadioItem,
+  DropdownTrigger,
+} from './primitives/Dropdown'
 import { LocaleItems } from '@/types'
 import { useRouter } from 'next/router'
-import { BiGlobe, BiCheck } from 'react-icons/bi'
+import { BiGlobe } from 'react-icons/bi'
 import useTranslation from '@/hooks/useTranslation'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 const localeItems: LocaleItems[] = [
   {
@@ -19,47 +26,32 @@ export default function LangSwitcher() {
   const { locale, locales } = useRouter()
   const { t, setLocale } = useTranslation()
 
-  if (!locales) return null
+  if (!locales) {
+    return null
+  }
 
   return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <button aria-label="Lang switcher" className="simple-btn">
-          <BiGlobe />
-        </button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Portal>
-        <DropdownMenu.Content
-          align="end"
-          sideOffset={5}
-          className="dropdown-content shadow-md"
-        >
-          <DropdownMenu.Label className="dropdown-label mb-3 opacity-70">
-            {t('language')}
-          </DropdownMenu.Label>
-          <DropdownMenu.RadioGroup value={locale}>
-            {locales.map((l) => {
-              const localeItem = localeItems.find((item) => item.id === l)
-              if (localeItem) {
-                const localeItemId = localeItem.id
-                return (
-                  <DropdownMenu.RadioItem
-                    key={localeItemId}
-                    value={localeItemId}
-                    className="dropdown-item"
-                    onClick={() => setLocale(localeItemId)}
-                  >
-                    <DropdownMenu.ItemIndicator className="dropdown-indicator">
-                      <BiCheck />
-                    </DropdownMenu.ItemIndicator>
-                    {t(localeItem.code)}
-                  </DropdownMenu.RadioItem>
-                )
-              }
-            })}
-          </DropdownMenu.RadioGroup>
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Root>
+    <Dropdown>
+      <DropdownTrigger className="simple-btn" aria-label="Lang switcher">
+        <BiGlobe />
+      </DropdownTrigger>
+      <DropdownContent align="end">
+        <DropdownLabel className="dropdown-label">
+          {t('language')}
+        </DropdownLabel>
+        <DropdownRadioGroup value={locale}>
+          {localeItems.map(({ code, id }) => (
+            <DropdownRadioItem
+              key={id}
+              value={id}
+              className="dropdown-item"
+              onClick={() => setLocale(id)}
+            >
+              {t(code)}
+            </DropdownRadioItem>
+          ))}
+        </DropdownRadioGroup>
+      </DropdownContent>
+    </Dropdown>
   )
 }

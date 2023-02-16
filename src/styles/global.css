@@ -3,20 +3,19 @@
 @tailwind utilities;
 
 @layer components {
-  .dropdown-content {
-    @apply min-w-[100px] rounded-md bg-white p-2 outline-none duration-300 dark:bg-zinc-800;
-  }
-
   .dropdown-item {
     @apply relative flex h-7 cursor-pointer select-none items-center rounded-md py-0 px-2 pl-6 text-ssm leading-none outline-none data-[highlighted]:bg-zinc-100 data-[highlighted]:dark:bg-zinc-700/50;
   }
-
   .dropdown-indicator {
     @apply absolute left-0 inline-flex w-6 items-center justify-center;
   }
 
+  .dropdown-separator {
+    @apply my-1 h-[1px] bg-zinc-100 dark:bg-zinc-700/50;
+  }
+
   .dropdown-label {
-    @apply px-2 text-xs;
+    @apply mb-3 px-2 text-xs opacity-70;
   }
 
   .simple-btn {
