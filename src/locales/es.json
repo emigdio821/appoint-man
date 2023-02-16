@@ -25,5 +25,6 @@
   "dismiss": "Cerrar",
   "success": "¡Genial!",
   "appointmentCreated": "Tu cita ha sido registrada",
-  "invalidRange": "Rango inválido"
+  "invalidRange": "Rango inválido",
+  "profile": "Perfil"
 }

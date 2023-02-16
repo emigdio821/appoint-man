@@ -25,5 +25,6 @@
   "dismiss": "Dismiss",
   "success": "Success!",
   "appointmentCreated": "Your appointment has been registered",
-  "invalidRange": "Invalid range"
+  "invalidRange": "Invalid range",
+  "profile": "Profile"
 }
