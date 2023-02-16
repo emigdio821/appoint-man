@@ -1,5 +1,5 @@
 // import useSWR, { Fetcher } from 'swr'
-import { useEffect, useState } from 'react'
+import { useEffect, useCallback } from 'react'
 // import { useRouter } from 'next/router'
 import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
@@ -8,25 +8,25 @@ import CreateEvent from '@/components/CreateEvent'
 import useTranslation from '@/hooks/useTranslation'
 import { setCookie, getCookie } from 'cookies-next'
 import { GetServerSidePropsContext } from 'next/types'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { User, createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { shallow } from 'zustand/shallow'
 
 interface HomeProps {
   user: User
-  userImageUrl: string
   googleCookie: string | null
 }
 
-export default function Home({ user, userImageUrl, googleCookie }: HomeProps) {
+export default function Home({ googleCookie }: HomeProps) {
   // const router = useRouter()
   const { t } = useTranslation()
-  const { addUser } = useUserStore()
-
-  useEffect(() => {
-    if (user) {
-      const userData = { ...user, userImageUrl }
-      addUser(userData)
-    }
-  }, [addUser, user, userImageUrl])
+  const { user } = useUserStore(
+    (state) => ({
+      user: state.user,
+    }),
+    shallow,
+  )
+  const supabase = useSupabaseClient()
 
   // useEffect(() => {
   //   const {
@@ -45,11 +45,10 @@ export default function Home({ user, userImageUrl, googleCookie }: HomeProps) {
     <AppWrapper>
       <Helmet title={t('homePageTitle')} />
       <h3 className="text-xl font-semibold">
-        {t('welcome')}, {user.user_metadata?.name}
+        {t('welcome')}, {user?.user_metadata?.name}
       </h3>
       <h6 className="text-xs">Refresh token: {googleCookie}</h6>
       <p className="mb-6 text-sm">{t('welcomeDescription')}</p>
-      {/* <TimePicker /> */}
       <CreateEvent />
     </AppWrapper>
   )
@@ -79,16 +78,11 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   const googleCookie = getCookie('google-refresh-token', { req, res })
 
-  const { data } = await supabase.storage
-    .from('appoint-man')
-    .createSignedUrl(`avatars/${session.user.id}`, 60)
-
   return {
     props: {
       user: session.user,
       initialSession: session,
       googleCookie: googleCookie || null,
-      userImageUrl: data?.signedUrl || null,
     },
   }
 }

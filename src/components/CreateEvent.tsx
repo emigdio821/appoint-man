@@ -1,9 +1,4 @@
-import {
-  BiTime,
-  BiCalendar,
-  BiLoaderAlt,
-  BiCalendarEvent,
-} from 'react-icons/bi'
+import { BiTime, BiCalendar, BiLoader, BiCalendarEvent } from 'react-icons/bi'
 import clsx from 'clsx'
 import axios from 'axios'
 import { useState } from 'react'
@@ -94,7 +89,6 @@ export default function CreateEvent() {
     try {
       const event = await axios.post('/api/google/create-event', {
         event: eventPayload,
-        providerToken: user?.providerRefreshToken,
       })
 
       // console.log(event)
@@ -221,7 +215,7 @@ export default function CreateEvent() {
               >
                 {isSubmitting ? (
                   <>
-                    <BiLoaderAlt className="animate-spin" />
+                    <BiLoader className="animate-spin" />
                     Creating
                   </>
                 ) : (

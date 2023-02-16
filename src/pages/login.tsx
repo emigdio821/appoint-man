@@ -1,23 +1,23 @@
 import Link from 'next/link'
-// import { useEffect } from 'react'
-// import { useRouter } from 'next/router'
+import useUserStore from '@/stores/user'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
+import { useEffect, useCallback } from 'react'
 import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import LangSwitcher from '@/components/LangSwitcher'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
 import { GetServerSidePropsContext } from 'next/types'
 import { useSessionContext } from '@supabase/auth-helpers-react'
-import { BiCalendar, BiLoaderAlt, BiRightArrowAlt } from 'react-icons/bi'
+import { BiCalendar, BiLoader, BiRightArrowAlt } from 'react-icons/bi'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 
 export default function Login() {
-  // const router = useRouter()
   const { t } = useTranslation()
   const { showToast } = useToastManager()
-  // ${googleScope}/calendar
+  const addUser = useUserStore((state) => state.addUser)
   const { supabaseClient, session, isLoading } = useSessionContext()
+  const user = session?.user
 
   async function signInWithGoogle() {
     const googleScope = 'https://www.googleapis.com/auth'
@@ -42,11 +42,31 @@ export default function Login() {
     }
   }
 
-  // useEffect(() => {
-  //   if (session) {
-  //     router.push('/')
-  //   }
-  // }, [router, session])
+  const handleUser = useCallback(async () => {
+    if (user) {
+      const { data } = await supabaseClient.storage
+        .from('appoint-man')
+        .createSignedUrl(`avatars/${user.id}`, session.expires_in)
+
+      const userData = { ...user, userImageUrl: data?.signedUrl }
+      addUser(userData)
+      await supabaseClient.from('users').upsert(
+        {
+          id: user?.id,
+          role: 'employee',
+          email: user?.email,
+          name: user?.user_metadata.full_name,
+        },
+        { onConflict: 'email' },
+      )
+    }
+  }, [addUser, session?.expires_in, supabaseClient, user])
+
+  useEffect(() => {
+    if (user) {
+      handleUser()
+    }
+  }, [handleUser, user])
 
   return (
     <>
@@ -72,7 +92,7 @@ export default function Login() {
                   >
                     {t('goToHome')}
                     {isLoading ? (
-                      <BiLoaderAlt className="animate-spin" />
+                      <BiLoader className="animate-spin" />
                     ) : (
                       <BiRightArrowAlt />
                     )}
@@ -87,7 +107,7 @@ export default function Login() {
                     className="simple-btn flex w-full max-w-[240px] items-center justify-center gap-2 rounded-full text-sm"
                   >
                     {isLoading ? (
-                      <BiLoaderAlt className="animate-spin" />
+                      <BiLoader className="animate-spin" />
                     ) : (
                       <FaGoogle />
                     )}

@@ -21,11 +21,13 @@ export const DropdownContent = forwardRef<HTMLDivElement, DDMenuContentProps>(
     <DropdownPrimitive.Portal>
       <DropdownPrimitive.Content
         {...props}
+        align="end"
+        sideOffset={5}
         ref={forwardedRef}
         className="min-w-[100px] rounded-md bg-white p-2 shadow-md outline-none duration-300 dark:bg-zinc-800"
       >
         {children}
-        <DropdownPrimitive.Arrow />
+        {/* <DropdownPrimitive.Arrow /> */}
       </DropdownPrimitive.Content>
     </DropdownPrimitive.Portal>
   ),
