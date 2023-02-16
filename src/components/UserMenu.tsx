@@ -6,24 +6,32 @@ import {
   DropdownTrigger,
   DropdownSeparator,
 } from './primitives/Dropdown'
+import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import useUserStore from '@/stores/user'
 import { deleteCookie } from 'cookies-next'
 import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
-import { BiCog, BiSun, BiMoon, BiLogOut, BiUser } from 'react-icons/bi'
+import { BiCog, BiSun, BiMoon, BiUser, BiLogOut } from 'react-icons/bi'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import * as Avatar from '@radix-ui/react-avatar'
+import { shallow } from 'zustand/shallow'
 
 export default function UserMenu() {
   const router = useRouter()
   const { locale } = router
   const { t } = useTranslation()
-  const { user, removeUser } = useUserStore()
   const { theme, setTheme } = useTheme()
   const isDarkTheme = theme === 'dark'
   const { showToast } = useToastManager()
+  const { user, removeUser } = useUserStore(
+    (state) => ({
+      user: state.user,
+      removeUser: state.removeUser,
+    }),
+    shallow,
+  )
   const { supabaseClient, isLoading } = useSessionContext()
 
   async function openSettings() {
@@ -51,7 +59,7 @@ export default function UserMenu() {
   return (
     <Dropdown>
       <DropdownTrigger
-        disabled={isLoading || !user}
+        // disabled={isLoading || !user}
         className="simple-btn flex items-center gap-2 text-sm font-medium"
       >
         <span className="max-xs:hidden">
@@ -80,12 +88,14 @@ export default function UserMenu() {
         <DropdownLabel className="dropdown-label mb-3 opacity-70">
           {user?.email}
         </DropdownLabel>
-        <DropdownItem className="dropdown-item" onClick={openSettings}>
-          <div className="dropdown-indicator">
-            <BiCog />
-          </div>
-          {t('settings')}
-        </DropdownItem>
+        <Link href="/profile" passHref>
+          <DropdownItem className="dropdown-item">
+            <div className="dropdown-indicator">
+              <BiUser />
+            </div>
+            {t('profile')}
+          </DropdownItem>
+        </Link>
         <DropdownItem
           className="dropdown-item"
           onClick={() => setTheme(isDarkTheme ? 'light' : 'dark')}
@@ -98,6 +108,13 @@ export default function UserMenu() {
           ) : (
             <>{`${t('theme')} ${isDarkTheme ? t('light') : t('dark')}`}</>
           )}
+        </DropdownItem>
+        <DropdownSeparator className="dropdown-separator" />
+        <DropdownItem className="dropdown-item" onClick={openSettings}>
+          <div className="dropdown-indicator">
+            <BiCog />
+          </div>
+          {t('settings')}
         </DropdownItem>
         <DropdownSeparator className="dropdown-separator" />
         <DropdownItem

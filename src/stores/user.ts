@@ -5,6 +5,7 @@ interface UserState {
   user: User | null
   addUser: (user: User) => void
   removeUser: () => void
+  updateAvatar: (url: string) => void
 }
 
 const useUserStore = create<UserState>((set) => ({
@@ -19,6 +20,22 @@ const useUserStore = create<UserState>((set) => ({
       ...state,
       user: null,
     })),
+  updateAvatar: (url) =>
+    set((state) => {
+      if (state.user) {
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            userImageUrl: url,
+          },
+        }
+      }
+      return {
+        ...state,
+        user: null,
+      }
+    }),
 }))
 
 export default useUserStore
