@@ -1,43 +1,8 @@
+import en from '@/locales/en.json'
 import { User as SupaUser } from '@supabase/auth-helpers-nextjs'
 
-export interface Translation {
-  homePageTitle: string
-  welcome: string
-  welcomeTo: string
-  welcomeDescription: string
-  settings: string
-  theme: string
-  light: string
-  dark: string
-  logout: string
-  login: string
-  signInWith: string
-  error: string
-  backToHome: string
-  pageNotFound: string
-  english: string
-  spanish: string
-  language: string
-  goToHome: string
-  invalidEmail: string
-  requiredField: string
-  email: string
-  name: string
-  createAppointmentTitle: string
-  dismiss: string
-  success: string
-  appointmentCreated: string
-  invalidRange: string
-}
-
-export interface Translations {
-  en: Translation
-  es: Translation
-}
-
-export type Locale = keyof Translations
-
-export type TranslationKey = keyof Translation
+export type TranslationKey = keyof typeof en
+export type Locale = 'en' | 'es'
 
 export interface LocaleItems {
   id: Locale
@@ -45,14 +10,10 @@ export interface LocaleItems {
 }
 
 interface UserImageUrl {
-  userImageUrl: string
+  userImageUrl?: string
 }
 
-interface ProviderRefreshToken {
-  providerRefreshToken?: string | null
-}
-
-export interface User extends UserImageUrl, ProviderRefreshToken, SupaUser {}
+export interface User extends UserImageUrl, SupaUser {}
 
 export interface ToastOptions {
   title: string
