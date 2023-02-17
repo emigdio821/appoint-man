@@ -34,3 +34,9 @@ export function arrayRange(start: number, stop: number, step: number = 1) {
   }
   return result
 }
+
+export function bytesToMB(bytes: number) {
+  if (bytes === 0) return 0
+
+  return (bytes / Math.pow(1024, 2)).toFixed(1)
+}
