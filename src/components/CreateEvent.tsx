@@ -1,5 +1,4 @@
-import { BiTime, BiCalendar, BiLoader, BiCalendarEvent } from 'react-icons/bi'
-import clsx from 'clsx'
+import { BiTime, BiLoader, BiCalendarEvent } from 'react-icons/bi'
 import axios from 'axios'
 import { useState } from 'react'
 import useUserStore from '@/stores/user'

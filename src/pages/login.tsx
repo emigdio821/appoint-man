@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { User } from '@/types'
 import useUserStore from '@/stores/user'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
@@ -11,10 +12,10 @@ import { GetServerSidePropsContext } from 'next/types'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import { BiCalendar, BiLoader, BiRightArrowAlt } from 'react-icons/bi'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
-import { User } from '@/types'
 
 export default function Login() {
   const { t } = useTranslation()
+  const errorMsg = t('error')
   const { showToast } = useToastManager()
   const addUser = useUserStore((state) => state.addUser)
   const { supabaseClient, session, isLoading } = useSessionContext()
@@ -35,7 +36,7 @@ export default function Login() {
         },
       })
     } catch (err) {
-      let error = t('error')
+      let error = errorMsg
       if (err instanceof Error) {
         error = err.message
       }
@@ -45,23 +46,32 @@ export default function Login() {
 
   const handleUser = useCallback(async () => {
     if (user) {
-      const { data } = await supabaseClient.storage
-        .from('appoint-man')
-        .createSignedUrl(`avatars/${user.id}`, 3600)
+      try {
+        const { data } = await supabaseClient.storage
+          .from('appoint-man')
+          .createSignedUrl(`avatars/${user.id}`, 3600)
+        const avatarUrl = data?.signedUrl || ''
 
-      const userData: User = { ...user, avatar: data?.signedUrl }
-      addUser(userData)
-      await supabaseClient.from('users').upsert(
-        {
-          id: user?.id,
-          role: 'employee',
-          email: user?.email,
-          name: user?.user_metadata.full_name,
-        },
-        { onConflict: 'email' },
-      )
+        const userData: User = { ...user, avatar: avatarUrl }
+        addUser(userData)
+        const { error } = await supabaseClient.from('users').upsert(
+          {
+            id: user?.id,
+            role: 'employee',
+            email: user?.email,
+            name: user?.user_metadata.full_name,
+          },
+          { onConflict: 'email' },
+        )
+      } catch (err) {
+        let error = errorMsg
+        if (err instanceof Error) {
+          error = err.message
+        }
+        showToast({ title: 'Error', description: error })
+      }
     }
-  }, [addUser, supabaseClient, user])
+  }, [addUser, supabaseClient, user, showToast, errorMsg])
 
   useEffect(() => {
     if (user) {

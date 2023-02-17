@@ -1,12 +1,12 @@
 // import useSWR, { Fetcher } from 'swr'
-// import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 // import { useRouter } from 'next/router'
 import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
+import { setCookie } from 'cookies-next'
 import AppWrapper from '@/components/AppWrapper'
 import CreateEvent from '@/components/CreateEvent'
 import useTranslation from '@/hooks/useTranslation'
-import { setCookie, getCookie } from 'cookies-next'
 import { GetServerSidePropsContext } from 'next/types'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { User, createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
@@ -20,12 +20,20 @@ interface HomeProps {
 export default function Home({ user, googleCookie }: HomeProps) {
   // const router = useRouter()
   const { t } = useTranslation()
-  // const { user } = useUserStore(
+  // const { userFromStore, addUser } = useUserStore(
   //   (state) => ({
-  //     user: state.user,
+  //     userFromStore: state.user,
+  //     addUser: state.addUser,
   //   }),
   //   shallow,
   // )
+
+  // useEffect(() => {
+  //   if (user) {
+  //     addUser(user)
+  //   }
+  // }, [addUser, user])
+
   // const supabase = useSupabaseClient()
 
   // useEffect(() => {
@@ -76,7 +84,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     })
   }
 
-  const googleCookie = getCookie('google-refresh-token', { req, res })
+  const googleCookie = req.cookies['google-refresh-token']
 
   return {
     props: {

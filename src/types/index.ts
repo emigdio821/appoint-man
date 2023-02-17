@@ -10,7 +10,7 @@ export interface LocaleItems {
 }
 
 interface UserAvatar {
-  avatar?: string
+  avatar: string
 }
 
 export interface User extends UserAvatar, SupaUser {}
@@ -47,4 +47,11 @@ export interface EventFormValues {
   date: string
   startTime: string
   endTime: string
+}
+
+export interface ProfileDB {
+  id: string
+  role: string
+  name: string
+  email: string
 }

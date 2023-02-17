@@ -93,7 +93,7 @@ export default function UserMenu() {
               alt="Avatar"
               src={user.avatar}
               onLoadingStatusChange={async (status) => {
-                if (status === 'error') {
+                if (status === 'error' && user.avatar) {
                   const { data } = await supabaseClient.storage
                     .from('appoint-man')
                     .createSignedUrl(`avatars/${user.id}`, 3600)
@@ -105,10 +105,7 @@ export default function UserMenu() {
               className="h-full w-full rounded-[inherit] object-cover"
             />
           )}
-          <Avatar.Fallback
-            // delayMs={600}
-            className="flex h-full w-full items-center justify-center bg-zinc-100 dark:bg-zinc-700"
-          >
+          <Avatar.Fallback className="flex h-full w-full items-center justify-center bg-zinc-100 dark:bg-zinc-700">
             <BiUser />
           </Avatar.Fallback>
         </Avatar.Root>

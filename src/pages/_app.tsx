@@ -18,12 +18,12 @@ export default function App({
 }: AppProps<{
   initialSession: Session
 }>) {
-  const [supabaseClient] = useState(() => createBrowserSupabaseClient())
+  const [supabase] = useState(() => createBrowserSupabaseClient())
   const router = useRouter()
 
   return (
     <SessionContextProvider
-      supabaseClient={supabaseClient}
+      supabaseClient={supabase}
       initialSession={pageProps.initialSession}
     >
       <ThemeProvider attribute="class" defaultTheme="dark">
