@@ -1,5 +1,5 @@
 // import useSWR, { Fetcher } from 'swr'
-import { useEffect, useCallback } from 'react'
+// import { useEffect, useState } from 'react'
 // import { useRouter } from 'next/router'
 import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
@@ -17,16 +17,16 @@ interface HomeProps {
   googleCookie: string | null
 }
 
-export default function Home({ googleCookie }: HomeProps) {
+export default function Home({ user, googleCookie }: HomeProps) {
   // const router = useRouter()
   const { t } = useTranslation()
-  const { user } = useUserStore(
-    (state) => ({
-      user: state.user,
-    }),
-    shallow,
-  )
-  const supabase = useSupabaseClient()
+  // const { user } = useUserStore(
+  //   (state) => ({
+  //     user: state.user,
+  //   }),
+  //   shallow,
+  // )
+  // const supabase = useSupabaseClient()
 
   // useEffect(() => {
   //   const {
@@ -45,7 +45,7 @@ export default function Home({ googleCookie }: HomeProps) {
     <AppWrapper>
       <Helmet title={t('homePageTitle')} />
       <h3 className="text-xl font-semibold">
-        {t('welcome')}, {user?.user_metadata?.name}
+        {t('welcome')}, {user.user_metadata?.name}
       </h3>
       <h6 className="text-xs">Refresh token: {googleCookie}</h6>
       <p className="mb-6 text-sm">{t('welcomeDescription')}</p>

@@ -9,11 +9,11 @@ export interface LocaleItems {
   code: TranslationKey
 }
 
-interface UserImageUrl {
-  userImageUrl?: string
+interface UserAvatar {
+  avatar?: string
 }
 
-export interface User extends UserImageUrl, SupaUser {}
+export interface User extends UserAvatar, SupaUser {}
 
 export interface ToastOptions {
   title: string

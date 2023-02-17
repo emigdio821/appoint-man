@@ -10,13 +10,22 @@ import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import useUserStore from '@/stores/user'
+import { useState, useEffect } from 'react'
 import { deleteCookie } from 'cookies-next'
 import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
-import { BiCog, BiSun, BiMoon, BiUser, BiLogOut } from 'react-icons/bi'
+import {
+  BiCog,
+  BiSun,
+  BiMoon,
+  BiUser,
+  BiLogOut,
+  BiLoader,
+} from 'react-icons/bi'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import * as Avatar from '@radix-ui/react-avatar'
 import { shallow } from 'zustand/shallow'
+import { User } from '@/types'
 
 export default function UserMenu() {
   const router = useRouter()
@@ -25,10 +34,12 @@ export default function UserMenu() {
   const { theme, setTheme } = useTheme()
   const isDarkTheme = theme === 'dark'
   const { showToast } = useToastManager()
-  const { user, removeUser } = useUserStore(
+  const [user, setUser] = useState<User | null>(null)
+  const { userFromStore, removeUser, updateAvatar } = useUserStore(
     (state) => ({
-      user: state.user,
+      userFromStore: state.user,
       removeUser: state.removeUser,
+      updateAvatar: state.updateAvatar,
     }),
     shallow,
   )
@@ -56,24 +67,47 @@ export default function UserMenu() {
     }
   }
 
+  useEffect(() => {
+    setUser(userFromStore)
+  }, [userFromStore])
+
   return (
     <Dropdown>
       <DropdownTrigger
-        // disabled={isLoading || !user}
+        disabled={isLoading || !user}
         className="simple-btn flex items-center gap-2 text-sm font-medium"
       >
         <span className="max-xs:hidden">
-          {user?.user_metadata.name?.split(' ')[0] || 'No user'}
+          {user ? (
+            <>{user.user_metadata.name?.split(' ')[0]}</>
+          ) : (
+            <div
+              role="status"
+              className="h-2 w-14 animate-pulse rounded-md bg-zinc-300 dark:bg-zinc-600"
+            />
+          )}
         </span>
         <Avatar.Root className="inline-flex h-5 w-5 select-none items-center justify-center overflow-hidden rounded-md bg-blackA3 align-middle">
-          <Avatar.Image
-            alt="Avatar"
-            src={user?.userImageUrl}
-            className="h-full w-full rounded-[inherit] object-cover"
-          />
+          {user && (
+            <Avatar.Image
+              alt="Avatar"
+              src={user.avatar}
+              onLoadingStatusChange={async (status) => {
+                if (status === 'error') {
+                  const { data } = await supabaseClient.storage
+                    .from('appoint-man')
+                    .createSignedUrl(`avatars/${user.id}`, 3600)
+                  if (data?.signedUrl) {
+                    updateAvatar(data.signedUrl)
+                  }
+                }
+              }}
+              className="h-full w-full rounded-[inherit] object-cover"
+            />
+          )}
           <Avatar.Fallback
-            delayMs={600}
-            className="flex h-full w-full items-center justify-center bg-zinc-200 text-sm font-medium dark:bg-zinc-700"
+            // delayMs={600}
+            className="flex h-full w-full items-center justify-center bg-zinc-100 dark:bg-zinc-700"
           >
             <BiUser />
           </Avatar.Fallback>

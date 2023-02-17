@@ -11,6 +11,7 @@ import { GetServerSidePropsContext } from 'next/types'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import { BiCalendar, BiLoader, BiRightArrowAlt } from 'react-icons/bi'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { User } from '@/types'
 
 export default function Login() {
   const { t } = useTranslation()
@@ -46,9 +47,9 @@ export default function Login() {
     if (user) {
       const { data } = await supabaseClient.storage
         .from('appoint-man')
-        .createSignedUrl(`avatars/${user.id}`, session.expires_in)
+        .createSignedUrl(`avatars/${user.id}`, 3600)
 
-      const userData = { ...user, userImageUrl: data?.signedUrl }
+      const userData: User = { ...user, avatar: data?.signedUrl }
       addUser(userData)
       await supabaseClient.from('users').upsert(
         {
@@ -60,7 +61,7 @@ export default function Login() {
         { onConflict: 'email' },
       )
     }
-  }, [addUser, session?.expires_in, supabaseClient, user])
+  }, [addUser, supabaseClient, user])
 
   useEffect(() => {
     if (user) {
