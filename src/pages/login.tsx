@@ -47,7 +47,7 @@ export default function Login() {
     if (user) {
       try {
         addUser(user)
-        const { error } = await supabaseClient.from('users').upsert(
+        const { error } = await supabaseClient.from('profiles').upsert(
           {
             id: user?.id,
             role: 'employee',

@@ -50,7 +50,7 @@ export default function UserMenu() {
       await supabaseClient.auth.signOut()
       removeUser()
       deleteCookie('google-refresh-token')
-      router.push('/')
+      router.push('/login')
     } catch (err) {
       let error = t('error')
       if (err instanceof Error) {
