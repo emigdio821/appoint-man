@@ -10,22 +10,14 @@ import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import useUserStore from '@/stores/user'
+import { shallow } from 'zustand/shallow'
 import { useState, useEffect } from 'react'
 import { deleteCookie } from 'cookies-next'
+import * as Avatar from '@radix-ui/react-avatar'
 import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
-import {
-  BiCog,
-  BiSun,
-  BiMoon,
-  BiUser,
-  BiLogOut,
-  BiLoader,
-} from 'react-icons/bi'
-import { useSessionContext } from '@supabase/auth-helpers-react'
-import * as Avatar from '@radix-ui/react-avatar'
-import { shallow } from 'zustand/shallow'
-import { User } from '@/types'
+import { BiCog, BiSun, BiMoon, BiUser, BiLogOut } from 'react-icons/bi'
+import { useSessionContext, type User } from '@supabase/auth-helpers-react'
 
 export default function UserMenu() {
   const router = useRouter()
@@ -35,8 +27,9 @@ export default function UserMenu() {
   const isDarkTheme = theme === 'dark'
   const { showToast } = useToastManager()
   const [user, setUser] = useState<User | null>(null)
-  const { userFromStore, removeUser, updateAvatar } = useUserStore(
+  const { userFromStore, removeUser, updateAvatar, avatar } = useUserStore(
     (state) => ({
+      avatar: state.avatar,
       userFromStore: state.user,
       removeUser: state.removeUser,
       updateAvatar: state.updateAvatar,
@@ -91,9 +84,9 @@ export default function UserMenu() {
           {user && (
             <Avatar.Image
               alt="Avatar"
-              src={user.avatar}
+              src={avatar}
               onLoadingStatusChange={async (status) => {
-                if (status === 'error' && user.avatar) {
+                if (status === 'error' && avatar) {
                   const { data } = await supabaseClient.storage
                     .from('appoint-man')
                     .createSignedUrl(`avatars/${user.id}`, 3600)

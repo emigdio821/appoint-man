@@ -1,8 +1,9 @@
-import { User } from '@/types'
 import { create } from 'zustand'
+import { User } from '@supabase/auth-helpers-nextjs'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
 interface UserState {
+  avatar: string
   user: User | null
   addUser: (user: User) => void
   removeUser: () => void
@@ -13,6 +14,7 @@ const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
       user: get()?.user || null,
+      avatar: get()?.avatar || '',
       addUser: (user) =>
         set((state) => ({
           ...state,
@@ -23,22 +25,11 @@ const useUserStore = create<UserState>()(
           ...state,
           user: null,
         })),
-      updateAvatar: (url) =>
-        set((state) => {
-          if (state.user) {
-            return {
-              ...state,
-              user: {
-                ...state.user,
-                avatar: url,
-              },
-            }
-          }
-          return {
-            ...state,
-            user: null,
-          }
-        }),
+      updateAvatar: (url: string) =>
+        set((state) => ({
+          ...state,
+          avatar: url,
+        })),
     }),
     {
       name: 'user-storage',

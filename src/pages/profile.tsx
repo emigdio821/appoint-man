@@ -1,5 +1,4 @@
 import clsx from 'clsx'
-import { User } from '@/types'
 import { bytesToMB } from '@/utils'
 import useUserStore from '@/stores/user'
 import Helmet from '@/components/Helmet'
@@ -10,7 +9,7 @@ import { BiCamera, BiUser } from 'react-icons/bi'
 import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import { useState, useEffect, useRef } from 'react'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import { useSupabaseClient, User } from '@supabase/auth-helpers-react'
 
 export default function Profile() {
   const { t } = useTranslation()
@@ -20,8 +19,9 @@ export default function Profile() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { userFromStore, updateAvatar } = useUserStore(
+  const { userFromStore, avatar, updateAvatar } = useUserStore(
     (state) => ({
+      avatar: state.avatar,
       userFromStore: state.user,
       updateAvatar: state.updateAvatar,
     }),
@@ -105,9 +105,9 @@ export default function Profile() {
               {user && (
                 <Avatar.Image
                   alt="Avatar"
-                  src={user.avatar}
+                  src={avatar}
                   onLoadingStatusChange={async (status) => {
-                    if (status === 'error' && user.avatar) {
+                    if (status === 'error' && avatar) {
                       const { data } = await supabase.storage
                         .from('appoint-man')
                         .createSignedUrl(`avatars/${user.id}`, 3600)
