@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { User } from '@/types'
 import useUserStore from '@/stores/user'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
@@ -47,13 +46,7 @@ export default function Login() {
   const handleUser = useCallback(async () => {
     if (user) {
       try {
-        const { data } = await supabaseClient.storage
-          .from('appoint-man')
-          .createSignedUrl(`avatars/${user.id}`, 3600)
-        const avatarUrl = data?.signedUrl || ''
-
-        const userData: User = { ...user, avatar: avatarUrl }
-        addUser(userData)
+        addUser(user)
         const { error } = await supabaseClient.from('users').upsert(
           {
             id: user?.id,
@@ -63,6 +56,9 @@ export default function Login() {
           },
           { onConflict: 'email' },
         )
+        if (error) {
+          throw new Error(error.message)
+        }
       } catch (err) {
         let error = errorMsg
         if (err instanceof Error) {
