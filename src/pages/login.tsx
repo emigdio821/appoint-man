@@ -2,7 +2,7 @@ import Link from 'next/link'
 import useUserStore from '@/stores/user'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import LangSwitcher from '@/components/LangSwitcher'
@@ -14,9 +14,10 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 
 export default function Login() {
   const { t } = useTranslation()
-  const errorMsg = t('error')
   const { showToast } = useToastManager()
   const addUser = useUserStore((state) => state.addUser)
+  const avatar = useUserStore((state) => state.avatar)
+  const updateAvatar = useUserStore((state) => state.updateAvatar)
   const { supabaseClient, session, isLoading } = useSessionContext()
   const user = session?.user
 
@@ -35,7 +36,7 @@ export default function Login() {
         },
       })
     } catch (err) {
-      let error = errorMsg
+      let error = t('error')
       if (err instanceof Error) {
         error = err.message
       }
@@ -45,35 +46,33 @@ export default function Login() {
 
   const handleUser = useCallback(async () => {
     if (user) {
-      try {
-        addUser(user)
-        const { error } = await supabaseClient.from('profiles').upsert(
-          {
-            id: user?.id,
-            role: 'employee',
-            email: user?.email,
-            name: user?.user_metadata.full_name,
-          },
-          { onConflict: 'email' },
-        )
-        if (error) {
-          throw new Error(error.message)
-        }
-      } catch (err) {
-        let error = errorMsg
-        if (err instanceof Error) {
-          error = err.message
-        }
-        showToast({ title: 'Error', description: error })
+      if (!avatar) {
+        const { data } = await supabaseClient.storage
+          .from('appoint-man')
+          .createSignedUrl(`avatars/${user.id}`, 3600)
+
+        const avatarUrl = data?.signedUrl || ''
+        updateAvatar(avatarUrl)
       }
+
+      addUser(user)
+      await supabaseClient.from('profiles').upsert(
+        {
+          id: user.id,
+          role: 'employee',
+          email: user.email,
+          name: user.user_metadata.full_name,
+        },
+        { onConflict: 'email' },
+      )
     }
-  }, [addUser, supabaseClient, user, showToast, errorMsg])
+  }, [addUser, supabaseClient, updateAvatar, user, avatar])
 
   useEffect(() => {
     if (user) {
       handleUser()
     }
-  }, [handleUser, user])
+  }, [user, handleUser])
 
   return (
     <>
