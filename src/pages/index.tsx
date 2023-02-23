@@ -5,8 +5,8 @@ import Helmet from '@/components/Helmet'
 import useUserStore from '@/stores/user'
 import { setCookie } from 'cookies-next'
 import AppWrapper from '@/components/AppWrapper'
-import CreateEvent from '@/components/CreateEvent'
 import useTranslation from '@/hooks/useTranslation'
+import Appointments from '@/components/Appointments'
 import { GetServerSidePropsContext } from 'next/types'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { User, createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
@@ -55,9 +55,8 @@ export default function Home({ user, googleCookie }: HomeProps) {
       <h3 className="text-xl font-semibold">
         {t('welcome')}, {user.user_metadata?.name}
       </h3>
-      <h6 className="text-xs">Refresh token: {googleCookie}</h6>
-      <p className="mb-6 text-sm">{t('welcomeDescription')}</p>
-      <CreateEvent />
+      <h6 className="mb-4 text-xs">Refresh token: {googleCookie}</h6>
+      <Appointments />
     </AppWrapper>
   )
 }

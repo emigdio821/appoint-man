@@ -1,20 +1,19 @@
 import Link from 'next/link'
+import { toast } from 'sonner'
 import useUserStore from '@/stores/user'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
 import { useEffect, useCallback, useState } from 'react'
-import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import LangSwitcher from '@/components/LangSwitcher'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
 import { GetServerSidePropsContext } from 'next/types'
 import { useSessionContext } from '@supabase/auth-helpers-react'
-import { BiCalendar, BiLoader, BiRightArrowAlt } from 'react-icons/bi'
+import { BiCalendar, BiLoaderAlt, BiRightArrowAlt } from 'react-icons/bi'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 
 export default function Login() {
   const { t } = useTranslation()
-  const { showToast } = useToastManager()
   const addUser = useUserStore((state) => state.addUser)
   const avatar = useUserStore((state) => state.avatar)
   const updateAvatar = useUserStore((state) => state.updateAvatar)
@@ -40,7 +39,7 @@ export default function Login() {
       if (err instanceof Error) {
         error = err.message
       }
-      showToast({ title: 'Error', description: error })
+      toast.error('Error', { description: error })
     }
   }
 
@@ -98,7 +97,7 @@ export default function Login() {
                   >
                     {t('goToHome')}
                     {isLoading ? (
-                      <BiLoader className="animate-spin" />
+                      <BiLoaderAlt className="animate-spinner" />
                     ) : (
                       <BiRightArrowAlt />
                     )}
@@ -113,7 +112,7 @@ export default function Login() {
                     className="simple-btn flex w-full max-w-[240px] items-center justify-center gap-2 rounded-full text-sm"
                   >
                     {isLoading ? (
-                      <BiLoader className="animate-spin" />
+                      <BiLoaderAlt className="animate-spinner" />
                     ) : (
                       <FaGoogle />
                     )}

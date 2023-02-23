@@ -22,6 +22,11 @@ module.exports = {
         ...defaultTheme.screens,
       },
       keyframes: {
+        spinner: {
+          '100%': {
+            transform: 'rotate(360deg)',
+          },
+        },
         slideUpAndFade: {
           '0%': { opacity: 0, transform: 'translateY(2px)' },
           '100%': { opacity: 1, transform: 'translateY(0)' },
@@ -37,14 +42,6 @@ module.exports = {
         slideLeftAndFade: {
           '0%': { opacity: 0, transform: 'translateX(2px)' },
           '100%': { opacity: 1, transform: 'translateX(0)' },
-        },
-        swipeOut: {
-          '0%': {
-            transform: 'translateX(var(--radix-toast-swipe-end-x))',
-          },
-          '100%': {
-            transform: `translateX(calc(100% + ${defaultTheme.spacing[6]}))`,
-          },
         },
         slideIn: {
           '0%': {
@@ -92,10 +89,10 @@ module.exports = {
           'slideLeftAndFade 200ms cubic-bezier(0.16, 0, 0.13, 1)',
         slideIn: 'slideIn 200ms cubic-bezier(0.16, 1, 0.3, 1)',
         hide: 'hide 100ms ease-in',
-        swipeOut: 'swipeOut 100ms ease-out',
         overlayShow: 'overlayShow 300ms cubic-bezier(0.16, 1, 0.3, 1)',
         contentShow: 'contentShow 200ms cubic-bezier(0.16, 1, 0.3, 1)',
         contentHide: 'contentHide 200ms cubic-bezier(0.16, 1, 0.3, 1)',
+        spinner: 'spinner 800ms linear infinite',
       },
     },
   },

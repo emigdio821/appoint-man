@@ -1,10 +1,10 @@
 import { useState } from 'react'
+import { Toaster } from 'sonner'
 import { AppProps } from 'next/app'
 // import { Inter } from '@next/font/google'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/Navbar'
 import { ThemeProvider } from 'next-themes'
-import { ToastProvider } from '@/context/toast'
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { SessionContextProvider, Session } from '@supabase/auth-helpers-react'
 import '@/styles/global.css'
@@ -27,10 +27,18 @@ export default function App({
       initialSession={pageProps.initialSession}
     >
       <ThemeProvider attribute="class" defaultTheme="dark">
-        <ToastProvider>
-          {!hideNav.includes(router.pathname) && <Navbar />}
-          <Component {...pageProps} />
-        </ToastProvider>
+        {!hideNav.includes(router.pathname) && <Navbar />}
+        <Toaster
+          duration={6000}
+          toastOptions={{
+            className:
+              'bg-white text-black dark:border-zinc-800 dark:bg-zinc-900 dark:text-white',
+          }}
+          style={{
+            position: 'fixed',
+          }}
+        />
+        <Component {...pageProps} />
       </ThemeProvider>
     </SessionContextProvider>
   )

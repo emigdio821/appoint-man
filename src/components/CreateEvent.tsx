@@ -1,24 +1,30 @@
-import { BiTime, BiLoader, BiCalendarEvent } from 'react-icons/bi'
 import axios from 'axios'
+import { toast } from 'sonner'
 import { useState } from 'react'
 import useUserStore from '@/stores/user'
 import { useForm } from 'react-hook-form'
-import { useToastManager } from '@/context/toast'
 import { appointmentsSchema } from '@/form-schemas'
 import useTranslation from '@/hooks/useTranslation'
-import { Select, SelectItem } from './primitives/Select'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Dialog, DialogContent, DialogTrigger } from './primitives/Dialog'
+import { Select, SelectItem } from './primitives/Select'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import { BiTime, BiLoaderAlt, BiCalendarEvent } from 'react-icons/bi'
 import { formatDate, arrayRange, roundToNearest1hr } from '@/utils'
-import { TranslationKey, EventPayload, EventFormValues } from '@/types'
+import { Dialog, DialogContent, DialogTrigger } from './primitives/Dialog'
+import {
+  TranslationKey,
+  EventPayload,
+  EventFormValues,
+  EventResponse,
+} from '@/types'
 
 const startWorkingHour = 10
 const endWorkingHour = 20
 
 export default function CreateEvent() {
   const { t } = useTranslation()
-  const { user } = useUserStore()
-  const { showToast } = useToastManager()
+  const supabase = useSupabaseClient()
+  const user = useUserStore((state) => state.user)
   const [dialogOpened, setDialogOpened] = useState(false)
   const {
     reset,
@@ -86,17 +92,30 @@ export default function CreateEvent() {
     }
 
     try {
-      const event = await axios.post('/api/google/create-event', {
-        event: eventPayload,
-      })
+      const { data: eventData } = await axios.post<EventResponse>(
+        '/api/google/create-event',
+        {
+          event: eventPayload,
+        },
+      )
 
-      // console.log(event)
+      const { error } = await supabase.from('appointments').insert({
+        created_at: eventData.start.dateTime,
+        ends_in: eventData.end.dateTime,
+        attendees: eventData.attendees.map((data) => ({ user_id: data.email })),
+        summary: eventData.summary,
+        organizer: user?.email,
+        description: eventData.description,
+      })
+      if (error) {
+        throw new Error(error.message)
+      }
       setDialogOpened(false)
       reset()
-      showToast({ title: t('success'), description: t('appointmentCreated') })
+      toast.success(t('success'), { description: t('appointmentCreated') })
     } catch (error) {
       console.error(error)
-      showToast({ title: 'Error', description: t('error') })
+      toast.error('Error', { description: t('error') })
     }
   })
 
@@ -112,8 +131,8 @@ export default function CreateEvent() {
     >
       <DialogTrigger asChild>
         <button
-          className="simple-btn text-sm outline-none"
           onClick={() => setDialogOpened(true)}
+          className="simple-btn text-sm outline-none"
         >
           Create Appointment
         </button>
@@ -214,7 +233,7 @@ export default function CreateEvent() {
               >
                 {isSubmitting ? (
                   <>
-                    <BiLoader className="animate-spin" />
+                    <BiLoaderAlt className="animate-spinner" />
                     Creating
                   </>
                 ) : (

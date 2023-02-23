@@ -22,30 +22,6 @@
     @apply rounded-md border bg-zinc-100 p-2 outline-none ring-zinc-300 hover:bg-zinc-200/70 focus:ring-2 active:translate-y-px disabled:pointer-events-none disabled:opacity-50 data-[disabled=true]:pointer-events-none data-[state=open]:bg-zinc-200/70 data-[disabled=true]:opacity-70 dark:border-zinc-800 dark:bg-zinc-800/70 dark:ring-zinc-700 dark:hover:bg-zinc-800 dark:data-[state=open]:bg-zinc-800;
   }
 
-  .toast-move {
-    @apply data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)];
-  }
-
-  .toast-cancel {
-    @apply data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform;
-  }
-
-  .toast-slindein {
-    @apply data-[state=open]:animate-slideIn;
-  }
-
-  .toast-closed {
-    @apply data-[state=closed]:animate-hide;
-  }
-
-  .toast-swipe-end {
-    @apply data-[swipe=end]:animate-swipeOut;
-  }
-
-  .toast-viewport {
-    @apply fixed bottom-0 right-0 z-50 m-0 flex w-[26rem] max-w-[100vw] list-none flex-col gap-2 p-4;
-  }
-
   .simple-input {
     @apply rounded-md border bg-transparent p-2 outline-none ring-zinc-300 focus:border-transparent focus:ring-2 disabled:border-zinc-200/70 disabled:bg-zinc-200/70 disabled:opacity-70 disabled:placeholder:opacity-50 dark:border-zinc-800 dark:ring-zinc-700 disabled:dark:border-blackA8 disabled:dark:bg-blackA8;
   }

@@ -40,3 +40,14 @@ export function bytesToMB(bytes: number) {
 
   return (bytes / Math.pow(1024, 2)).toFixed(1)
 }
+
+export function dateToLocaleString(date: Date, locale = 'en') {
+  return date.toLocaleString(locale, {
+    hour12: false,
+    hour: 'numeric',
+    minute: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    year: 'numeric',
+  })
+}

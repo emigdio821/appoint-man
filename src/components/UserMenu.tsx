@@ -7,6 +7,7 @@ import {
   DropdownSeparator,
 } from './primitives/Dropdown'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import useUserStore from '@/stores/user'
@@ -14,7 +15,6 @@ import { shallow } from 'zustand/shallow'
 import { useState, useEffect } from 'react'
 import { deleteCookie } from 'cookies-next'
 import * as Avatar from '@radix-ui/react-avatar'
-import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import { BiCog, BiSun, BiMoon, BiUser, BiLogOut } from 'react-icons/bi'
 import { useSessionContext, type User } from '@supabase/auth-helpers-react'
@@ -25,7 +25,6 @@ export default function UserMenu() {
   const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
   const isDarkTheme = theme === 'dark'
-  const { showToast } = useToastManager()
   const [user, setUser] = useState<User | null>(null)
   const { userFromStore, removeUser, updateAvatar, avatar } = useUserStore(
     (state) => ({
@@ -39,8 +38,7 @@ export default function UserMenu() {
   const { supabaseClient, isLoading } = useSessionContext()
 
   async function openSettings() {
-    showToast({
-      title: 'Info',
+    toast('Info', {
       description: 'This options is still in construction, come back later',
     })
   }
@@ -56,7 +54,7 @@ export default function UserMenu() {
       if (err instanceof Error) {
         error = err.message
       }
-      showToast({ title: 'Error', description: error })
+      toast('Error', { description: error })
     }
   }
 

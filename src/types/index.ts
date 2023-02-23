@@ -8,16 +8,6 @@ export interface LocaleItems {
   code: TranslationKey
 }
 
-export interface ToastOptions {
-  title: string
-  description?: string
-  onOpenChange?: (isOpen: boolean) => void
-  action?: {
-    text: string
-    callback: () => void
-  }
-}
-
 export interface EventPayload {
   summary: string
   description: string
@@ -47,4 +37,22 @@ export interface ProfileDB {
   role: string
   name: string
   email: string
+}
+
+export interface EventResponse {
+  created_at: string
+  end: {
+    dateTime: string
+    timeZone: string
+  }
+  start: {
+    dateTime: string
+    timeZone: string
+  }
+  attendees: {
+    email: string
+  }[]
+  summary: string
+  organizer: string
+  description: string
 }

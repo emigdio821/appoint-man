@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { toast } from 'sonner'
 import { bytesToMB } from '@/utils'
 import useUserStore from '@/stores/user'
 import Helmet from '@/components/Helmet'
@@ -6,16 +7,14 @@ import { shallow } from 'zustand/shallow'
 import AppWrapper from '@/components/AppWrapper'
 import * as Avatar from '@radix-ui/react-avatar'
 import { BiCamera, BiUser } from 'react-icons/bi'
-import { useToastManager } from '@/context/toast'
 import useTranslation from '@/hooks/useTranslation'
 import { useState, useEffect, useRef } from 'react'
 import { useSupabaseClient, User } from '@supabase/auth-helpers-react'
 
 export default function Profile() {
   const { t } = useTranslation()
-  const supabase = useSupabaseClient()
   const pageTitle = t('profile')
-  const { showToast } = useToastManager()
+  const supabase = useSupabaseClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -46,8 +45,7 @@ export default function Profile() {
     if (files?.length) {
       const size = bytesToMB(files[0].size)
       if (size > 2) {
-        showToast({
-          title: 'Error',
+        toast.error('Error', {
           description: 'The file is too big, try another one',
         })
       } else {
@@ -70,7 +68,7 @@ export default function Profile() {
           if (error instanceof Error) {
             err = error.message
           }
-          showToast({ title: 'Error', description: err })
+          toast.error('Error', { description: err })
         } finally {
           setIsLoading(false)
         }
