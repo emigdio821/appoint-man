@@ -31,12 +31,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(
           </SelectPrimitive.Icon>
         </SelectPrimitive.Trigger>
         <SelectPrimitive.Portal>
-          <SelectPrimitive.Content
-            align="end"
-            // sideOffset={5}
-            // position="popper"
-            className="overflow-hidden rounded-md border bg-white shadow-md dark:border-none dark:bg-zinc-800"
-          >
+          <SelectPrimitive.Content className="max-h-[var(--radix-select-content-available-height)] w-[var(--radix-select-trigger-width)] overflow-hidden rounded-md border bg-white shadow-md dark:border-none dark:bg-zinc-800">
             <SelectPrimitive.ScrollUpButton className="flex h-6 cursor-default items-center justify-center bg-white dark:bg-zinc-800">
               <BiChevronUp />
             </SelectPrimitive.ScrollUpButton>

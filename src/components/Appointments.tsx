@@ -1,23 +1,38 @@
-import CreateEvent from './CreateEvent'
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownLabel,
+  DropdownItem,
+  DropdownTrigger,
+} from './primitives/Dropdown'
+import { Database } from '@/types/supabase'
 import { dateToLocaleString } from '@/utils'
-import { BiLoaderAlt } from 'react-icons/bi'
+import CreateEventDialog from './CreateEventDialog'
 import useTranslation from '@/hooks/useTranslation'
+import useAppointmentsStore from '@/stores/appointments'
 import { useEffect, useState, useCallback } from 'react'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import { BiRefresh, BiMenu, BiCalendarPlus, BiLoaderAlt } from 'react-icons/bi'
 
 export default function Appointments() {
   const { t } = useTranslation()
-  const supabase = useSupabaseClient()
+  const supabase = useSupabaseClient<Database>()
+  const [dialogOpened, setDialogOpened] = useState(false)
   const [appointments, setAppointments] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const refreshAppointments = useAppointmentsStore(
+    (state) => state.refreshAppointments,
+  )
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getAppointments = useCallback(async () => {
+    setIsLoading(true)
     const { data } = await supabase.from('appointments').select()
     if (data?.length) {
+      refreshAppointments(data)
       setAppointments(data)
     }
     setIsLoading(false)
-  }, [supabase])
+  }, [refreshAppointments, supabase])
 
   useEffect(() => {
     getAppointments()
@@ -25,13 +40,48 @@ export default function Appointments() {
 
   return (
     <div>
-      <h2 className="mb-4 flex items-center justify-between gap-2 text-lg font-semibold">
-        <span className="flex items-center gap-2">
-          {t('myAppointments')}{' '}
+      <CreateEventDialog
+        dialogOpened={dialogOpened}
+        setDialogOpened={setDialogOpened}
+      />
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          {t('myAppointments')}
           {isLoading && <BiLoaderAlt className="animate-spinner" />}
-        </span>
-        <CreateEvent />
-      </h2>
+        </h2>
+        <Dropdown>
+          <DropdownTrigger
+            className="simple-btn"
+            aria-label="Appointments options"
+          >
+            <BiMenu />
+          </DropdownTrigger>
+          <DropdownContent align="end">
+            <DropdownLabel className="dropdown-label">
+              {t('options')}
+            </DropdownLabel>
+            <DropdownItem
+              disabled={isLoading}
+              className="dropdown-item"
+              onClick={getAppointments}
+            >
+              <div className="dropdown-indicator">
+                <BiRefresh />
+              </div>
+              {t('refresh')}
+            </DropdownItem>
+            <DropdownItem
+              className="dropdown-item"
+              onClick={() => setDialogOpened(true)}
+            >
+              <div className="dropdown-indicator">
+                <BiCalendarPlus />
+              </div>
+              {t('createAppointmentTitle')}
+            </DropdownItem>
+          </DropdownContent>
+        </Dropdown>
+      </div>
       <div className="grid grid-cols-3 gap-2 max-md:grid-cols-1">
         {appointments.map((appointment) => {
           const {

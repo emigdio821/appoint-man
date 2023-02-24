@@ -16,6 +16,7 @@ import { useState, useEffect } from 'react'
 import { deleteCookie } from 'cookies-next'
 import * as Avatar from '@radix-ui/react-avatar'
 import useTranslation from '@/hooks/useTranslation'
+import useAppointmentsStore from '@/stores/appointments'
 import { BiCog, BiSun, BiMoon, BiUser, BiLogOut } from 'react-icons/bi'
 import { useSessionContext, type User } from '@supabase/auth-helpers-react'
 
@@ -26,6 +27,10 @@ export default function UserMenu() {
   const { theme, setTheme } = useTheme()
   const isDarkTheme = theme === 'dark'
   const [user, setUser] = useState<User | null>(null)
+  const removeAppointmets = useAppointmentsStore(
+    (state) => state.removeAppointments,
+    shallow,
+  )
   const { userFromStore, removeUser, updateAvatar, avatar } = useUserStore(
     (state) => ({
       avatar: state.avatar,
@@ -47,6 +52,7 @@ export default function UserMenu() {
     try {
       await supabaseClient.auth.signOut()
       removeUser()
+      removeAppointmets()
       deleteCookie('google-refresh-token')
       router.push('/login')
     } catch (err) {
@@ -146,7 +152,7 @@ export default function UserMenu() {
           <div className="dropdown-indicator text-red-400">
             <BiLogOut />
           </div>
-          <div>Logout</div>
+          <div>{t('logout')}</div>
         </DropdownItem>
       </DropdownContent>
     </Dropdown>

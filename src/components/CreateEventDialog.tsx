@@ -7,25 +7,33 @@ import { appointmentsSchema } from '@/form-schemas'
 import useTranslation from '@/hooks/useTranslation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Select, SelectItem } from './primitives/Select'
+import { Dialog, DialogContent } from './primitives/Dialog'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { BiTime, BiLoaderAlt, BiCalendarEvent } from 'react-icons/bi'
 import { formatDate, arrayRange, roundToNearest1hr } from '@/utils'
-import { Dialog, DialogContent, DialogTrigger } from './primitives/Dialog'
+import { BiTime, BiLoaderAlt, BiCalendarEvent, BiUser } from 'react-icons/bi'
 import {
   TranslationKey,
   EventPayload,
   EventFormValues,
   EventResponse,
 } from '@/types'
+import { Database } from '@/types/supabase'
 
 const startWorkingHour = 0
 const endWorkingHour = 24
 
-export default function CreateEvent() {
+interface CreateEventDialogProps {
+  dialogOpened: boolean
+  setDialogOpened: (opt: boolean) => void
+}
+
+export default function CreateEventDialog({
+  dialogOpened,
+  setDialogOpened,
+}: CreateEventDialogProps) {
   const { t } = useTranslation()
-  const supabase = useSupabaseClient()
+  const supabase = useSupabaseClient<Database>()
   const user = useUserStore((state) => state.user)
-  const [dialogOpened, setDialogOpened] = useState(false)
   const {
     reset,
     trigger,
@@ -38,6 +46,7 @@ export default function CreateEvent() {
     defaultValues: {
       summary: '',
       endTime: '',
+      employee: '',
       description: '',
       date: formatDate(new Date()),
       startTime: roundToNearest1hr().getHours().toString(),
@@ -86,7 +95,7 @@ export default function CreateEvent() {
       },
       attendees: [
         {
-          email: 'em.torresruiz92@gmail.com',
+          email: values.employee,
         },
       ],
     }
@@ -129,14 +138,14 @@ export default function CreateEvent() {
         setDialogOpened(opened)
       }}
     >
-      <DialogTrigger asChild>
+      {/* <DialogTrigger asChild className="font-normal">
         <button
           onClick={() => setDialogOpened(true)}
-          className="simple-btn text-sm outline-none"
+          className="simple-btn text-sm"
         >
           {t('createAppointmentTitle')}
         </button>
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent
         title={t('createAppointmentTitle')}
         onInteractOutside={(e) => e.preventDefault()}
@@ -168,6 +177,22 @@ export default function CreateEvent() {
                   {t(errors.description.message as TranslationKey)}
                 </p>
               )}
+            </div>
+            <div className="flex flex-col gap-1">
+              <Select
+                icon={<BiUser />}
+                {...register('employee')}
+                placeholder={t('person')}
+                onValueChange={(value) => {
+                  setValue('employee', value, {
+                    shouldValidate: true,
+                  })
+                }}
+              >
+                <SelectItem value="em.torresruiz92@gmail.com">
+                  Em Torres
+                </SelectItem>
+              </Select>
             </div>
             <div className="flex flex-col gap-1">
               <input

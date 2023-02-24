@@ -10,11 +10,12 @@ import { BiCamera, BiUser } from 'react-icons/bi'
 import useTranslation from '@/hooks/useTranslation'
 import { useState, useEffect, useRef } from 'react'
 import { useSupabaseClient, User } from '@supabase/auth-helpers-react'
+import { Database } from '@/types/supabase'
 
 export default function Profile() {
   const { t } = useTranslation()
   const pageTitle = t('profile')
-  const supabase = useSupabaseClient()
+  const supabase = useSupabaseClient<Database>()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)

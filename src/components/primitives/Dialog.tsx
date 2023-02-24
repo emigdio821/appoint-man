@@ -12,7 +12,7 @@ type DialogContentProps = {
 export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
   ({ children, title, description, ...props }, forwardedRef) => (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 animate-overlayShow overflow-y-auto bg-blackA9 backdrop-blur-sm" />
+      <DialogPrimitive.Overlay className="fixed inset-0 animate-overlayShow overflow-y-auto bg-blackA11 backdrop-blur-sm" />
       <DialogPrimitive.Content
         {...props}
         ref={forwardedRef}
