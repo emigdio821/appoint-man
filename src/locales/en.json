@@ -21,7 +21,7 @@
   "requiredField": "Required field",
   "email": "Email",
   "name": "Name",
-  "createAppointmentTitle": "Create an appointment",
+  "createAppointmentTitle": "Create appointment",
   "dismiss": "Dismiss",
   "success": "Success!",
   "appointmentCreated": "Your appointment has been registered",
@@ -38,5 +38,8 @@
   "create": "Create",
   "creating": "Creating",
   "myAppointments": "My appointments",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "person": "Person",
+  "options": "Options",
+  "refresh": "Refresh"
 }
