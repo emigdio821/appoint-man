@@ -1,12 +1,14 @@
+import CreateEvent from './CreateEvent'
 import { dateToLocaleString } from '@/utils'
+import { BiLoaderAlt } from 'react-icons/bi'
+import useTranslation from '@/hooks/useTranslation'
 import { useEffect, useState, useCallback } from 'react'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { BiLoaderAlt } from 'react-icons/bi'
-import CreateEvent from './CreateEvent'
 
 export default function Appointments() {
+  const { t } = useTranslation()
   const supabase = useSupabaseClient()
-  const [appointments, setAppointments] = useState([])
+  const [appointments, setAppointments] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const getAppointments = useCallback(async () => {
@@ -25,7 +27,7 @@ export default function Appointments() {
     <div>
       <h2 className="mb-4 flex items-center justify-between gap-2 text-lg font-semibold">
         <span className="flex items-center gap-2">
-          My Appointments{' '}
+          {t('myAppointments')}{' '}
           {isLoading && <BiLoaderAlt className="animate-spinner" />}
         </span>
         <CreateEvent />
@@ -57,7 +59,7 @@ export default function Appointments() {
                 </p>
                 <p>
                   Attendees:{' '}
-                  {attendees.map((a) => (
+                  {attendees.map((a: any) => (
                     <span
                       key={`${a.user_id}}-${created_at}`}
                       className="font-semibold"
@@ -72,7 +74,7 @@ export default function Appointments() {
               </div>
 
               <button disabled={isLoading} className="simple-btn text-sm">
-                Cancel
+                {t('cancel')}
               </button>
             </div>
           )

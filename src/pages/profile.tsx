@@ -33,10 +33,29 @@ export default function Profile() {
       .createSignedUrl(`avatars/${user?.id}`, 3600)
 
     if (error) {
+      setIsLoading(false)
       throw new Error(error.message)
     }
 
     updateAvatar(data.signedUrl)
+    setIsLoading(false)
+  }
+
+  async function handleFile(files: FileList) {
+    setIsLoading(true)
+    const { error } = await supabase.storage
+      .from('appoint-man')
+      .upload(`avatars/${user?.id}`, files[0], {
+        upsert: true,
+        contentType: files[0].type,
+      })
+
+    if (error) {
+      setIsLoading(false)
+      throw new Error(error.message)
+    }
+
+    createAvatarUrl()
   }
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -44,33 +63,20 @@ export default function Profile() {
 
     if (files?.length) {
       const size = bytesToMB(files[0].size)
-      if (size > 2) {
+      if (size > 3) {
         toast.error('Error', {
-          description: 'The file is too big, try another one',
+          description: t('fileTooBig'),
         })
       } else {
         try {
-          setIsLoading(true)
-          const { error } = await supabase.storage
-            .from('appoint-man')
-            .update(`avatars/${user?.id}`, files[0], {
-              upsert: true,
-              contentType: files[0].type,
-            })
-
-          if (error) {
-            throw new Error(error.message)
-          }
-
-          await createAvatarUrl()
+          toast.promise(() => handleFile(files), {
+            error: t('error'),
+            success: t('avatarUpdated'),
+            loading: `${t('uploading')}...`,
+          })
         } catch (error) {
-          let err = t('error')
-          if (error instanceof Error) {
-            err = error.message
-          }
-          toast.error('Error', { description: err })
-        } finally {
-          setIsLoading(false)
+          console.error(error)
+          toast.error('Error', { description: t('error') })
         }
       }
     }
@@ -120,7 +126,7 @@ export default function Profile() {
               <button
                 disabled={isLoading}
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-2 rounded-md border bg-zinc-200 p-[2px] px-1 shadow-md hover:bg-zinc-300 disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-800"
+                className="absolute -bottom-2 rounded-md border bg-zinc-100 p-[2px] px-1 disabled:opacity-70 dark:border-zinc-700 dark:bg-zinc-700"
               >
                 <BiCamera />
               </button>

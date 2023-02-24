@@ -18,8 +18,8 @@ import {
   EventResponse,
 } from '@/types'
 
-const startWorkingHour = 10
-const endWorkingHour = 20
+const startWorkingHour = 0
+const endWorkingHour = 24
 
 export default function CreateEvent() {
   const { t } = useTranslation()
@@ -134,11 +134,11 @@ export default function CreateEvent() {
           onClick={() => setDialogOpened(true)}
           className="simple-btn text-sm outline-none"
         >
-          Create Appointment
+          {t('createAppointmentTitle')}
         </button>
       </DialogTrigger>
       <DialogContent
-        title="Create Appointment"
+        title={t('createAppointmentTitle')}
         onInteractOutside={(e) => e.preventDefault()}
       >
         <div className="mt-4">
@@ -146,7 +146,7 @@ export default function CreateEvent() {
             <div className="flex flex-col gap-1">
               <input
                 type="text"
-                placeholder="Summary"
+                placeholder={t('title')}
                 {...register('summary')}
                 className="simple-input text-sm"
               />
@@ -159,8 +159,8 @@ export default function CreateEvent() {
 
             <div className="flex flex-col gap-1">
               <textarea
-                placeholder="Description"
                 {...register('description')}
+                placeholder={t('description')}
                 className="simple-input h-40 resize-none text-sm"
               />
               {errors.description && (
@@ -172,8 +172,8 @@ export default function CreateEvent() {
             <div className="flex flex-col gap-1">
               <input
                 type="date"
-                placeholder="Pick a Date"
                 {...register('date')}
+                placeholder={t('pickADate')}
                 className="simple-input text-sm"
               />
               {errors.date && (
@@ -186,8 +186,8 @@ export default function CreateEvent() {
               <div className="flex w-full flex-col gap-1">
                 <Select
                   icon={<BiTime />}
-                  placeholder="Start Time"
                   {...register('startTime')}
+                  placeholder={t('startTime')}
                   defaultValue={getValues('startTime')}
                   onValueChange={(value) => {
                     setValue('startTime', value, {
@@ -208,7 +208,7 @@ export default function CreateEvent() {
                 <Select
                   icon={<BiTime />}
                   {...register('endTime')}
-                  placeholder="End Time"
+                  placeholder={t('endTime')}
                   onValueChange={(value) => {
                     setValue('endTime', value, {
                       shouldValidate: true,
@@ -234,12 +234,12 @@ export default function CreateEvent() {
                 {isSubmitting ? (
                   <>
                     <BiLoaderAlt className="animate-spinner" />
-                    Creating
+                    {t('creating')}...
                   </>
                 ) : (
                   <>
                     <BiCalendarEvent />
-                    Create
+                    {t('create')}
                   </>
                 )}
               </button>

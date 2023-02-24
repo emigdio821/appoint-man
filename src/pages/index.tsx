@@ -52,10 +52,10 @@ export default function Home({ user, googleCookie }: HomeProps) {
   return (
     <AppWrapper>
       <Helmet title={t('homePageTitle')} />
-      <h3 className="text-xl font-semibold">
+      {/* <h3 className="mb-6 text-xl font-semibold">
         {t('welcome')}, {user.user_metadata?.name}
-      </h3>
-      <h6 className="mb-4 text-xs">Refresh token: {googleCookie}</h6>
+      </h3> */}
+      {/* <h6 className="mb-4 text-xs">Refresh token: {googleCookie}</h6> */}
       <Appointments />
     </AppWrapper>
   )

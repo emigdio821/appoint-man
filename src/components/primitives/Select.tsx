@@ -33,8 +33,8 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(
         <SelectPrimitive.Portal>
           <SelectPrimitive.Content
             align="end"
-            sideOffset={5}
-            position="popper"
+            // sideOffset={5}
+            // position="popper"
             className="overflow-hidden rounded-md border bg-white shadow-md dark:border-none dark:bg-zinc-800"
           >
             <SelectPrimitive.ScrollUpButton className="flex h-6 cursor-default items-center justify-center bg-white dark:bg-zinc-800">

@@ -68,7 +68,7 @@ export default function UserMenu() {
         disabled={isLoading || !user}
         className="simple-btn flex items-center gap-2 text-sm font-medium"
       >
-        <span className="max-xs:hidden">
+        <span className="font-semibold max-xs:hidden">
           {user ? (
             <>{user.user_metadata.name?.split(' ')[0]}</>
           ) : (
