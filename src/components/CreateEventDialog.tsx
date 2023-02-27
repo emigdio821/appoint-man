@@ -1,8 +1,8 @@
-import axios from 'axios'
+// import axios from 'axios'
 import { toast } from 'sonner'
-import { useState } from 'react'
 import useUserStore from '@/stores/user'
 import { useForm } from 'react-hook-form'
+import { Database } from '@/types/supabase'
 import { appointmentsSchema } from '@/form-schemas'
 import useTranslation from '@/hooks/useTranslation'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -11,13 +11,7 @@ import { Dialog, DialogContent } from './primitives/Dialog'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { formatDate, arrayRange, roundToNearest1hr } from '@/utils'
 import { BiTime, BiLoaderAlt, BiCalendarEvent, BiUser } from 'react-icons/bi'
-import {
-  TranslationKey,
-  EventPayload,
-  EventFormValues,
-  EventResponse,
-} from '@/types'
-import { Database } from '@/types/supabase'
+import { TranslationKey, EventFormValues, SupabaseEvent } from '@/types'
 
 const startWorkingHour = 0
 const endWorkingHour = 24
@@ -82,40 +76,46 @@ export default function CreateEventDialog({
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const startDateTime = new Date(`${values.date}, ${values.startTime}:00`)
     const endDateTime = new Date(`${values.date}, ${values.endTime}:00`)
-    const eventPayload: EventPayload = {
+    // const eventPayload: EventPayload = {
+    //   summary: values.summary,
+    //   description: values.description,
+    //   start: {
+    //     dateTime: startDateTime.toISOString(),
+    //     timeZome: timezone,
+    //   },
+    //   end: {
+    //     dateTime: endDateTime.toISOString(),
+    //     timeZone: timezone,
+    //   },
+    //   attendees: [
+    //     {
+    //       email: values.employee,
+    //     },
+    //   ],
+    // }
+
+    const eventPayload: SupabaseEvent = {
       summary: values.summary,
       description: values.description,
-      start: {
-        dateTime: startDateTime.toISOString(),
-        timeZome: timezone,
-      },
-      end: {
-        dateTime: endDateTime.toISOString(),
-        timeZone: timezone,
-      },
+      created_at: startDateTime.toISOString(),
+      ends_in: endDateTime.toISOString(),
       attendees: [
         {
-          email: values.employee,
+          user_id: values.employee,
         },
       ],
+      organizer: user?.email || '',
     }
 
     try {
-      const { data: eventData } = await axios.post<EventResponse>(
-        '/api/google/create-event',
-        {
-          event: eventPayload,
-        },
-      )
+      // const { data: eventData } = await axios.post<EventResponse>(
+      //   '/api/google/create-event',
+      //   {
+      //     event: eventPayload,
+      //   },
+      // )
 
-      const { error } = await supabase.from('appointments').insert({
-        created_at: eventData.start.dateTime,
-        ends_in: eventData.end.dateTime,
-        attendees: eventData.attendees.map((data) => ({ user_id: data.email })),
-        summary: eventData.summary,
-        organizer: user?.email,
-        description: eventData.description,
-      })
+      const { error } = await supabase.from('appointments').insert(eventPayload)
       if (error) {
         throw new Error(error.message)
       }

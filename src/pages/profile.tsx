@@ -11,6 +11,7 @@ import useTranslation from '@/hooks/useTranslation'
 import { useState, useEffect, useRef } from 'react'
 import { useSupabaseClient, User } from '@supabase/auth-helpers-react'
 import { Database } from '@/types/supabase'
+import BlurImage from '@/components/BlurImage'
 
 export default function Profile() {
   const { t } = useTranslation()
@@ -28,6 +29,17 @@ export default function Profile() {
     shallow,
   )
 
+  async function onAvatarError() {
+    if (avatar && user) {
+      const { data } = await supabase.storage
+        .from('appoint-man')
+        .createSignedUrl(`avatars/${user.id}`, 3600)
+      if (data?.signedUrl) {
+        updateAvatar(data.signedUrl)
+      }
+    }
+  }
+
   async function createAvatarUrl() {
     const { data, error } = await supabase.storage
       .from('appoint-man')
@@ -43,7 +55,6 @@ export default function Profile() {
   }
 
   async function handleFile(files: FileList) {
-    setIsLoading(true)
     const { error } = await supabase.storage
       .from('appoint-man')
       .upload(`avatars/${user?.id}`, files[0], {
@@ -70,6 +81,7 @@ export default function Profile() {
         })
       } else {
         try {
+          setIsLoading(true)
           toast.promise(() => handleFile(files), {
             error: t('error'),
             success: t('avatarUpdated'),

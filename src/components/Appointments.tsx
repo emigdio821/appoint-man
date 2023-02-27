@@ -5,6 +5,7 @@ import {
   DropdownItem,
   DropdownTrigger,
 } from './primitives/Dropdown'
+import { Appointment } from '@/types'
 import { Database } from '@/types/supabase'
 import { dateToLocaleString } from '@/utils'
 import CreateEventDialog from './CreateEventDialog'
@@ -12,13 +13,19 @@ import useTranslation from '@/hooks/useTranslation'
 import useAppointmentsStore from '@/stores/appointments'
 import { useEffect, useState, useCallback } from 'react'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { BiRefresh, BiMenu, BiCalendarPlus, BiLoaderAlt } from 'react-icons/bi'
+import {
+  BiRefresh,
+  BiMenu,
+  BiCalendarPlus,
+  BiLoaderAlt,
+  BiCheck,
+} from 'react-icons/bi'
 
 export default function Appointments() {
   const { t } = useTranslation()
   const supabase = useSupabaseClient<Database>()
   const [dialogOpened, setDialogOpened] = useState(false)
-  const [appointments, setAppointments] = useState<any[]>([])
+  const [appointments, setAppointments] = useState<Appointment[]>([])
   const refreshAppointments = useAppointmentsStore(
     (state) => state.refreshAppointments,
   )
@@ -93,21 +100,23 @@ export default function Appointments() {
             summary,
             description,
           } = appointment
-          const createAt = dateToLocaleString(new Date(created_at))
+          const createdAt = dateToLocaleString(new Date(created_at))
           const endsIn = dateToLocaleString(new Date(ends_in))
+          const today = dateToLocaleString(new Date(Date.now()))
+          const isExpired = endsIn < today
 
           return (
             <div
               key={id}
-              className="flex flex-col gap-2 rounded-md border p-4 text-sm dark:border-zinc-800"
+              className="flex flex-col justify-between gap-2 rounded-md border p-4 text-sm dark:border-zinc-800"
             >
-              <h4 className="text-md font-semibold">{summary}</h4>
-              <div>
+              <div className="mb-4">
+                <h4 className="mb-4 text-lg font-semibold">{summary}</h4>
                 <p>{description}</p>
-                <p>
+                {/* <p>
                   Organizer: <span className="font-semibold">{organizer}</span>
-                </p>
-                <p>
+                </p> */}
+                {/* <p>
                   Attendees:{' '}
                   {attendees.map((a: any) => (
                     <span
@@ -117,15 +126,25 @@ export default function Appointments() {
                       {a.user_id}
                     </span>
                   ))}
-                </p>
-                <p>
-                  {createAt} - {endsIn}
-                </p>
+                </p> */}
               </div>
-
-              <button disabled={isLoading} className="simple-btn text-sm">
-                {t('cancel')}
-              </button>
+              <div className="flex flex-col items-center justify-between gap-2">
+                <div className="w-full text-sm">
+                  {isExpired && (
+                    <span className="flex items-center gap-1 opacity-60">
+                      {t('eventCompleted')} <BiCheck />
+                    </span>
+                  )}
+                  <span>{createdAt}</span>
+                </div>
+                <button
+                  title={t('delete')}
+                  disabled={isLoading}
+                  className="simple-btn w-full text-sm"
+                >
+                  Details
+                </button>
+              </div>
             </div>
           )
         })}

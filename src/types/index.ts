@@ -72,3 +72,12 @@ export interface Appointment {
   description: string
   organizer: string
 }
+
+export interface SupabaseEvent {
+  summary: string
+  description: string
+  created_at: string
+  ends_in: string
+  attendees: Attendee[]
+  organizer: string
+}

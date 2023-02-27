@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import useUserStore from '@/stores/user'
 import Helmet from '@/components/Helmet'
 import { FaGoogle } from 'react-icons/fa'
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback } from 'react'
 import useTranslation from '@/hooks/useTranslation'
 import LangSwitcher from '@/components/LangSwitcher'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
@@ -21,7 +21,7 @@ export default function Login() {
   const user = session?.user
 
   async function signInWithGoogle() {
-    const googleScope = 'https://www.googleapis.com/auth'
+    // const googleScope = 'https://www.googleapis.com/auth'
     try {
       await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
@@ -31,7 +31,7 @@ export default function Login() {
             prompt: 'consent',
             access_type: 'offline',
           },
-          scopes: `${googleScope}/calendar.events`,
+          // scopes: `${googleScope}/calendar.events`,
         },
       })
     } catch (err) {

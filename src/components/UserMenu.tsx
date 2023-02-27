@@ -6,6 +6,7 @@ import {
   DropdownTrigger,
   DropdownSeparator,
 } from './primitives/Dropdown'
+import clsx from 'clsx'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { useTheme } from 'next-themes'

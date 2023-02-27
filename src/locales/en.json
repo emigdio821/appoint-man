@@ -41,5 +41,7 @@
   "cancel": "Cancel",
   "person": "Person",
   "options": "Options",
-  "refresh": "Refresh"
+  "refresh": "Refresh",
+  "eventCompleted": "Event completed",
+  "delete": "Delete"
 }
